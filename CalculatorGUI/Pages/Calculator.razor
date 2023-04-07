@@ -132,7 +132,9 @@
     }
 
     private void ClickBackSpace() {
-        input = input.Remove(input.Length - 1);
+        if (input != String.Empty) {
+            input = input.Remove(input.Length - 1);
+        }
     }
 
     private void ClickEquals() {
