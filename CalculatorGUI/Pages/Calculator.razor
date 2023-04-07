@@ -3,12 +3,15 @@
 
 <h1>Calculator</h1>
 
-<p>Formula: @input</p>
-<p>Answer: @output</p>
+<h2>
+    <p> Input: @input</p>
+    <p>Answer: @output</p>
+</h2>
 
 <p>
-    <button class="btn btn-dark" style="font-size: 20px; width: 80px" @onclick="ClickClear"> C </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 80px" @onclick="ClickBackSpace"> bs </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 80px; margin-right: 3px" @onclick="ClickClear"> C </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 80px; margin-right: 3px" @onclick="ClickBackSpace"> BS </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 80px" @onclick="ClickSaveAnswer"> ANS </button>
 </p>
 <p>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickExponent"> x^y </button>
@@ -46,89 +49,104 @@
 
 @code {
     string input = String.Empty;
+    List<char> list = new List<char>();
     string output = String.Empty;
 
     private void ClickOne() {
-        input += "1";
+        UpdateString('1');
     }
 
     private void ClickTwo() {
-        input += "2";
+        UpdateString('2');
     }
 
     private void ClickThree() {
-        input += "3";
+        UpdateString('3');
     }
 
     private void ClickFour() {
-        input += "4";
+        UpdateString('4');
     }
 
     private void ClickFive() {
-        input += "5";
+        UpdateString('5');
     }
 
     private void ClickSix() {
-        input += "6";
+        UpdateString('6');
     }
 
     private void ClickSeven() {
-        input += "7";
+        UpdateString('7');
     }
 
     private void ClickEight() {
-        input += "8";
+        UpdateString('8');
     }
 
     private void ClickNine() {
-        input += "9";
+        UpdateString('9');
     }
 
     private void ClickZero() {
-        input += "0";
+        UpdateString('0');
     }
 
     private void ClickDecimal() {
-        input += ".";
+        //TODO: make this work for the list.
+        if (!int.TryParse(input[input.Length-1].ToString(), out _)) {
+            UpdateString('0');
+        }
+        UpdateString('.');
     }
 
     private void ClickAddition() {
-        input += "+";
+        UpdateString('+');
     }
 
     private void ClickSubtraction() {
-        input += "-";
+        UpdateString('-');
     }
 
     private void ClickMultiplication() {
-        input += "*";
+        UpdateString('*');
     }
 
     private void ClickDivision() {
-        input += "/";
+        UpdateString('/');
     }
 
     private void ClickExponent() {
-        input += "^";
+        UpdateString('^');
     }
 
     private void ClickOpenParenthesis() {
-        input += "(";
+        UpdateString('(');
     }
 
     private void ClickClosedParenthesis() {
-        input += ")";
+        UpdateString(')');
     }
 
     private void ClickPlusOrMinus() {
-        if (input[input.Length - 1] == '-') {
-            input = input.Remove(input.Length - 1);
+        //TODO: check to see if the number is already negative. Currently just adds a new '-' sign.
+        for (int i = list.Count - 1; i >= 0; i--) {
+            if (i == 0) {
+                list.Insert(i, '-');
+                break;
+            }
+            if (!char.IsNumber(list[i])) {
+                list.Insert(i + 1, '-');
+                break;
+            }
         }
-        input += "-";
+        //UpdateString();
     }
 
     private void ClickClear() {
         input = String.Empty;
+        output = String.Empty;
+        list.Clear();
     }
 
     private void ClickBackSpace() {
@@ -140,5 +158,23 @@
     private void ClickEquals() {
         output = ExpressionTree.Evaluate(input).ToString();
         input = String.Empty;
+        list.Clear();
+    }
+
+    private void ClickSaveAnswer() {
+        input = output;
+        list.Clear();
+        foreach (char c in output) {
+            list.Add(c);
+        }
+        output = String.Empty;
+    }
+
+    private void UpdateString(char symbol) {
+        input = String.Empty;
+        list.Add(symbol);
+        foreach (char c in list) {
+            input += c;
+        }
     }
 }
