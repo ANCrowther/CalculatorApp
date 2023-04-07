@@ -1,0 +1,142 @@
+﻿@page "/calculator"
+@using ShuntingYardLibrary;
+
+<h1>Calculator</h1>
+
+<p>Formula: @input</p>
+<p>Answer: @output</p>
+
+<p>
+    <button class="btn btn-dark" style="font-size: 20px; width: 80px" @onclick="ClickClear"> C </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 80px" @onclick="ClickBackSpace"> bs </button>
+</p>
+<p>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickExponent"> x^y </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickOpenParenthesis"> ( </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickClosedParenthesis"> ) </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickDivision"> / </button>
+</p>
+<p>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickSeven"> 7 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickEight"> 8 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickNine"> 9 </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickMultiplication"> * </button>
+
+</p>
+<p>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickFour"> 4 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickFive"> 5 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickSix"> 6 </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickSubtraction"> - </button>
+</p>
+<p>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickOne"> 1 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickTwo"> 2 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickThree"> 3 </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickAddition"> + </button>
+
+</p>
+<p>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickPlusOrMinus"> +/- </button>
+    <button name="0" class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickZero"> 0 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="ClickDecimal"> . </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="ClickEquals"> = </button>
+
+</p>
+
+@code {
+    string input = String.Empty;
+    string output = String.Empty;
+
+    private void ClickOne() {
+        input += "1";
+    }
+
+    private void ClickTwo() {
+        input += "2";
+    }
+
+    private void ClickThree() {
+        input += "3";
+    }
+
+    private void ClickFour() {
+        input += "4";
+    }
+
+    private void ClickFive() {
+        input += "5";
+    }
+
+    private void ClickSix() {
+        input += "6";
+    }
+
+    private void ClickSeven() {
+        input += "7";
+    }
+
+    private void ClickEight() {
+        input += "8";
+    }
+
+    private void ClickNine() {
+        input += "9";
+    }
+
+    private void ClickZero() {
+        input += "0";
+    }
+
+    private void ClickDecimal() {
+        input += ".";
+    }
+
+    private void ClickAddition() {
+        input += "+";
+    }
+
+    private void ClickSubtraction() {
+        input += "-";
+    }
+
+    private void ClickMultiplication() {
+        input += "*";
+    }
+
+    private void ClickDivision() {
+        input += "/";
+    }
+
+    private void ClickExponent() {
+        input += "^";
+    }
+
+    private void ClickOpenParenthesis() {
+        input += "(";
+    }
+
+    private void ClickClosedParenthesis() {
+        input += ")";
+    }
+
+    private void ClickPlusOrMinus() {
+        if (input[input.Length - 1] == '-') {
+            input = input.Remove(input.Length - 1);
+        }
+        input += "-";
+    }
+
+    private void ClickClear() {
+        input = String.Empty;
+    }
+
+    private void ClickBackSpace() {
+        input = input.Remove(input.Length - 1);
+    }
+
+    private void ClickEquals() {
+        output = ExpressionTree.Evaluate(input).ToString();
+        input = String.Empty;
+    }
+}
