@@ -10,7 +10,7 @@ public class UnitTest1 {
     [InlineData(-1)]
     [InlineData(0)]
     [InlineData(84532.4652)]
-    public void TestNumberNode(double value) {
+    public void TestNumberNode(decimal value) {
         INode node = new NumberNode(value);
         Assert.Equal(value, node.Evaluate());
     }
@@ -24,8 +24,8 @@ public class UnitTest1 {
     public void TestAdditionNode(string value) {
         string[] tempValue = value.Split(' ');
         OperatorNode node = new AdditionNode();
-        node.LeftNode = new NumberNode(double.Parse(tempValue[0]));
-        node.RightNode = new NumberNode(double.Parse(tempValue[2]));
+        node.LeftNode = new NumberNode(decimal.Parse(tempValue[0]));
+        node.RightNode = new NumberNode(decimal.Parse(tempValue[2]));
         Assert.Equal(42, node.Evaluate());
     }
 
@@ -38,8 +38,8 @@ public class UnitTest1 {
     public void TestSubtractionNode(string value) {
         string[] tempValue = value.Split(' ');
         OperatorNode node = new SubtractionNode();
-        node.LeftNode = new NumberNode(double.Parse(tempValue[0]));
-        node.RightNode = new NumberNode(double.Parse(tempValue[2]));
+        node.LeftNode = new NumberNode(decimal.Parse(tempValue[0]));
+        node.RightNode = new NumberNode(decimal.Parse(tempValue[2]));
         Assert.Equal(42, node.Evaluate());
     }
 
@@ -52,8 +52,8 @@ public class UnitTest1 {
     public void TestMultiplicationNode(string value) {
         string[] tempValue = value.Split(' ');
         OperatorNode node = new MultiplicationNode();
-        node.LeftNode = new NumberNode(double.Parse(tempValue[0]));
-        node.RightNode = new NumberNode(double.Parse(tempValue[2]));
+        node.LeftNode = new NumberNode(decimal.Parse(tempValue[0]));
+        node.RightNode = new NumberNode(decimal.Parse(tempValue[2]));
         Assert.Equal(42, node.Evaluate());
     }
 
@@ -66,8 +66,8 @@ public class UnitTest1 {
     public void TestDivisionNode(string value) {
         string[] tempValue = value.Split(' ');
         OperatorNode node = new DivisionNode();
-        node.LeftNode = new NumberNode(double.Parse(tempValue[0]));
-        node.RightNode = new NumberNode(double.Parse(tempValue[2]));
+        node.LeftNode = new NumberNode(decimal.Parse(tempValue[0]));
+        node.RightNode = new NumberNode(decimal.Parse(tempValue[2]));
         Assert.Equal(42, node.Evaluate());
     }
 
@@ -79,8 +79,8 @@ public class UnitTest1 {
     public void TestDivisionByZeroNode(string value) {
         string[] tempValue = value.Split(' ');
         OperatorNode node = new DivisionNode();
-        node.LeftNode = new NumberNode(double.Parse(tempValue[0]));
-        node.RightNode = new NumberNode(double.Parse(tempValue[2]));
+        node.LeftNode = new NumberNode(decimal.Parse(tempValue[0]));
+        node.RightNode = new NumberNode(decimal.Parse(tempValue[2]));
         Assert.Throws<System.DivideByZeroException>(() => node.Evaluate());
     }
 
@@ -91,8 +91,8 @@ public class UnitTest1 {
     public void TestExponentNode(string value) {
         string[] tempValue = value.Split(' ');
         OperatorNode node = new ExponentNode();
-        node.LeftNode = new NumberNode(double.Parse(tempValue[0]));
-        node.RightNode = new NumberNode(double.Parse(tempValue[2]));
+        node.LeftNode = new NumberNode(decimal.Parse(tempValue[0]));
+        node.RightNode = new NumberNode(decimal.Parse(tempValue[2]));
         Assert.Equal(4096, node.Evaluate());
     }
 
@@ -104,8 +104,8 @@ public class UnitTest1 {
     public void TestExponentZeroNode(string value) {
         string[] tempValue = value.Split(' ');
         OperatorNode node = new ExponentNode();
-        node.LeftNode = new NumberNode(double.Parse(tempValue[0]));
-        node.RightNode = new NumberNode(double.Parse(tempValue[2]));
+        node.LeftNode = new NumberNode(decimal.Parse(tempValue[0]));
+        node.RightNode = new NumberNode(decimal.Parse(tempValue[2]));
         Assert.Equal(1, node.Evaluate());
     }
 
@@ -127,5 +127,13 @@ public class UnitTest1 {
     [InlineData("(((2+12)^2+68)/5.5)+16")]
     public void TestExpressionTreeEvaluation(string inputValue) {
         Assert.Equal(64, ExpressionTree.Evaluate(inputValue));
+    }
+
+    [Theory]
+    [InlineData("-5+9")]
+    [InlineData("16^-2")]
+    [InlineData("-16/-4")]
+    public void TestExpressionTreeNegativeNumbersEvaluation(string inputValue) {
+        Assert.Equal(4, ExpressionTree.Evaluate(inputValue));
     }
 }

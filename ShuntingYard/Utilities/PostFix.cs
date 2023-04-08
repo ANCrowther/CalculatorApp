@@ -22,8 +22,9 @@ public static class PostFix {
         Queue<string> numberQueue = new Queue<string>(list.Capacity);
 
         foreach (string token in list) {
-            if (int.TryParse(token, out int intResult) ||
-                double.TryParse(token, out double doubleResult) ||
+            if (int.TryParse(token, out _) ||
+                double.TryParse(token, out _) ||
+                decimal.TryParse(token, out _) ||
                 Regex.Match(token, @RegexStrings.Match).Success) {
                 numberQueue.Enqueue(token);
             } else {
