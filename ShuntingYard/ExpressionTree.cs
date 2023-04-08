@@ -17,7 +17,7 @@ public static class ExpressionTree {
     }
 
     private static INode CompileTree(string inputString) {
-        var tokenList = TokenManager.Tokenize(inputString, false);
+        var tokenList = TokenManager.Tokenize(inputString);
         Stack<INode> nodeStack = new Stack<INode>();
 
         foreach (string token in tokenList) {

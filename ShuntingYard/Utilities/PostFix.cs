@@ -16,7 +16,7 @@ public static class PostFix {
     public static string PostFixTraversal(string inputString) {
         inputString = inputString.Replace(" ", string.Empty);
         int parenthesisCount = 0;
-        var list = TokenManager.Tokenize(inputString, true);
+        var list = TokenManager.Tokenize(inputString);
 
         Stack<char> operatorStack = new Stack<char>();
         Queue<string> numberQueue = new Queue<string>(list.Capacity);
@@ -25,7 +25,7 @@ public static class PostFix {
             if (int.TryParse(token, out _) ||
                 double.TryParse(token, out _) ||
                 decimal.TryParse(token, out _) ||
-                Regex.Match(token, @RegexStrings.Match).Success) {
+                Regex.Match(token, @"[A-Za-z]+[0-9]+").Success) {
                 numberQueue.Enqueue(token);
             } else {
                 if (operators.Contains(token[0])) {
