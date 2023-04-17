@@ -1,6 +1,5 @@
 ﻿using ShuntingYardLibrary.Nodes;
 using ShuntingYardLibrary.Utilities;
-using System.Xml.Linq;
 
 namespace ShuntingYardLibrary;
 
@@ -18,10 +17,8 @@ public static class ExpressionTree {
             return rootNode.Evaluate().ToString();
         } catch (DivideByZeroException) {
             return ErrorMessages.DivideByZero;
-        } catch (ArgumentException) {
-            return ErrorMessages.Mismatch;
         } catch (Exception ex) {
-            return "Error";
+            return "ERR: Unknown";
         }
     }
 

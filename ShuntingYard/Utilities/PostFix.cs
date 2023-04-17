@@ -59,7 +59,6 @@ public static class PostFix {
             }
         }
 
-        // TODO: try catch to throw exception.
         if (parenthesisCount != 0) {
             throw new ArgumentException(ErrorMessages.Mismatch);
         }
