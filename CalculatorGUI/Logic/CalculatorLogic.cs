@@ -112,7 +112,7 @@ public static class CalculatorLogic {
     }
 
     public static void ClickEquals() {
-        output = ExpressionTree.Evaluate(input).ToString();
+        output = ExpressionTree.Evaluate(input);
         input = String.Empty;
         list.Clear();
     }

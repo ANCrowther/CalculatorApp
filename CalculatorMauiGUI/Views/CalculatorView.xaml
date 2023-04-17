@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalculatorMauiGUI.Views.CalculatorView"
+             xmlns:viewModels="clr-namespace:CalculatorMauiGUI.ViewModels"
+             Title="Calculator">
+    <ContentPage.BindingContext>
+        <viewModels:CalculatorViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize"
+                    Value="20" />
+            <Setter Property="BorderWidth"
+                    Value="1" />
+            <Setter Property="BorderColor"
+                    Value="Black" />
+        </Style>
+    </ContentPage.Resources>
+    <VerticalStackLayout>
+        <Grid WidthRequest="300"
+              HeightRequest="200"
+              ColumnDefinitions="40, 260"
+              RowDefinitions="Auto, Auto"
+              ColumnSpacing="4"
+              RowSpacing="4"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
+            <Label Text=">>"
+                   FontSize="24"
+                   Grid.Column="0" 
+                   Grid.Row="0"
+                   TextColor="Gold"/>
+            <Label Text="{Binding Entry, Mode=OneWay}" 
+                   FontSize="24"
+                   Grid.Column="1" 
+                   Grid.Row="0"
+                   LineBreakMode="HeadTruncation"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="End"/>
+            <Label Text="=" 
+                   FontSize="24"
+                   Grid.Column="0" 
+                   Grid.Row="1"
+                   TextColor="Gold"/>
+            <Label Text="{Binding Answer, Mode=OneWay}" 
+                   FontSize="24"
+                   Grid.Column="1" 
+                   Grid.Row="1"
+                   LineBreakMode="HeadTruncation"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="End"/>
+        </Grid>
+        <Grid WidthRequest="300"
+              HeightRequest="70"
+              ColumnDefinitions="100, 100, 100"
+              RowDefinitions="Auto"
+              ColumnSpacing="4"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
+            <Button Text="CLR" 
+                    Grid.Column="0"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding ClearCommand}"/>
+            <Button Text="&#x21E6;"
+                    Grid.Column="1"
+                    Command="{Binding BackspaceCommand}"/>
+            <Button Text="ANS" 
+                    Grid.Column="2"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding SaveAnswerCommand}"/>
+        </Grid>
+        <Grid WidthRequest="300"
+              HeightRequest="480"
+              ColumnDefinitions="60, 60, 60, 60, 60"
+              RowDefinitions="Auto, Auto, Auto, Auto"
+              ColumnSpacing="3"
+              RowSpacing="3"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
+            <BoxView
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill"
+                BackgroundColor="Purple"/>
+            
+            <Button Text="7" 
+                    Grid.Row="0" 
+                    Grid.Column="0"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="7"/>
+            <Button Text="8" 
+                    Grid.Row="0" 
+                    Grid.Column="1"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="8"/>
+            <Button Text="9" 
+                    Grid.Row="0" 
+                    Grid.Column="2"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="9"/>
+            <Button Text="(" 
+                    Grid.Row="0" 
+                    Grid.Column="3"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="("/>
+            <Button Text=")" 
+                    Grid.Row="0" 
+                    Grid.Column="4"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter=")"/>
+
+            <Button Text="4" 
+                    Grid.Row="1" 
+                    Grid.Column="0" 
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="4"/>
+            <Button Text="5" 
+                    Grid.Row="1" 
+                    Grid.Column="1" 
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="5"/>
+            <Button Text="6" 
+                    Grid.Row="1" 
+                    Grid.Column="2" 
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="6"/>
+            <Button Text="×" 
+                    Grid.Row="1" 
+                    Grid.Column="3"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="*"/>
+            <Button Text="÷" 
+                    Grid.Row="1" 
+                    Grid.Column="4"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="/"/>
+
+            <Button Text="1" 
+                    Grid.Row="2" 
+                    Grid.Column="0" 
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="1"/>
+            <Button Text="2" 
+                    Grid.Row="2" 
+                    Grid.Column="1" 
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="2"/>
+            <Button Text="3" 
+                    Grid.Row="2" 
+                    Grid.Column="2" 
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="3"/>
+            <Button Text="+" 
+                    Grid.Row="2" 
+                    Grid.Column="3"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="+"/>
+            <Button Text="-" 
+                    Grid.Row="2" 
+                    Grid.Column="4"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding DigitCommand}"
+                    CommandParameter="-"/>
+            
+            <Button Text="+/-" 
+                    Grid.Row="3" 
+                    Grid.Column="0"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="1"/>
+            <Button Text="0" 
+                    Grid.Row="3" 
+                    Grid.Column="1" 
+                    Command="{Binding DigitCommand}"
+                    CommandParameter="0"/>
+            <Button Text="." 
+                    Grid.Row="3" 
+                    Grid.Column="2" 
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="."/>
+            <Button Text="y^x" 
+                    Grid.Row="3" 
+                    Grid.Column="3"
+                    BackgroundColor="CadetBlue"
+                    Command="{Binding DigitCommand}" 
+                    CommandParameter="^"/>
+            <Button Text="=" 
+                    Grid.Row="3" 
+                    Grid.Column="4"
+                    BackgroundColor="Blue"
+                    TextColor="White"
+                    Command="{Binding AnswerCommand}"/>
+        </Grid>
+    </VerticalStackLayout>
+    
+</ContentPage>

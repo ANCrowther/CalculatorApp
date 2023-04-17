@@ -8,7 +8,7 @@
 <p>Answer: @CalculatorLogic.output</p>
 
 <p>
-    <button class="btn btn-dark" style="font-size: 20px; width: 80px; margin-right: 3px" @onclick="CalculatorLogic.ClickClear"> C </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 80px; margin-right: 3px" id="CLR" @onclick="CalculatorLogic.ClickClear"> CLR </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 80px; margin-right: 3px" @onclick="CalculatorLogic.ClickBackSpace"> BS </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 80px" @onclick="CalculatorLogic.ClickSaveAnswer"> ANS </button>
 </p>
@@ -19,7 +19,7 @@
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickDivision"> / </button>
 </p>
 <p>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickSeven"> 7 </button>
+    <button name="7" class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickSeven"> 7 </button>
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickEight"> 8 </button>
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickNine"> 9 </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickMultiplication"> * </button>

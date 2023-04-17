@@ -6,13 +6,22 @@ namespace ShuntingYardLibrary;
 
 // All the code in this file is included in all platforms.
 public static class ExpressionTree {
-    public static decimal Evaluate(string inputValue) {
-        INode rootNode = CompileTree(PostFix.PostFixTraversal(inputValue));
+    public static string Evaluate(string inputValue) {
+        INode rootNode;
         try {
-            return rootNode.Evaluate();
-        } catch {
-            //throw new NullReferenceException(ErrorMessages.EmptyTree);
-            return 0;
+            rootNode = CompileTree(PostFix.PostFixTraversal(inputValue));
+        } catch (ArgumentException) {
+            return ErrorMessages.Mismatch;
+        }
+
+        try {
+            return rootNode.Evaluate().ToString();
+        } catch (DivideByZeroException) {
+            return ErrorMessages.DivideByZero;
+        } catch (ArgumentException) {
+            return ErrorMessages.Mismatch;
+        } catch (Exception ex) {
+            return "Error";
         }
     }
 

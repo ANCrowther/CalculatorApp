@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Runtime.ExceptionServices;
+using System.Text.RegularExpressions;
 
 namespace ShuntingYardLibrary.Utilities;
 public static class PostFix {
@@ -58,6 +59,7 @@ public static class PostFix {
             }
         }
 
+        // TODO: try catch to throw exception.
         if (parenthesisCount != 0) {
             throw new ArgumentException(ErrorMessages.Mismatch);
         }
