@@ -175,8 +175,7 @@
                     Grid.Row="3" 
                     Grid.Column="0"
                     BackgroundColor="CadetBlue"
-                    Command="{Binding DigitCommand}" 
-                    CommandParameter="1"/>
+                    Command="{Binding NegativeDigitCommand}"/>
             <Button Text="0" 
                     Grid.Row="3" 
                     Grid.Column="1" 
