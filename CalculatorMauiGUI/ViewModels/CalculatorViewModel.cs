@@ -1,5 +1,6 @@
 ﻿using ShuntingYardLibrary;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace CalculatorMauiGUI.ViewModels
@@ -156,43 +157,72 @@ namespace CalculatorMauiGUI.ViewModels
         }
 
         private string ChangeDigitSign() {
-            bool isNumber = true;
             string output = "";
-            List<char> tokens = new List<char>();
+            List<string> digits = Tokenize(Entry);
 
-            foreach (char item in Entry) {
-                tokens.Add(item);
+            if (digits.Count == 1 && IsDigitCheck(digits[0])) {
+                digits.Add(")");
+                digits.Insert(0, "-");
+                digits.Insert(0, "(");
+                return RecombineString(digits);
             }
 
-            for (int i = tokens.Count; i >= 0; i--) {
-                if (isNumber == true && !(char.IsNumber(tokens[i]) || tokens[i] == '.')){
-                    isNumber = false;
-                }
-                if (i > 1) {
-                    if (isNumber == false && IsOperator(tokens[i - 1]) && !(tokens[i - 1] == '(')) {
-                        tokens.Insert(i, '-');
-                        break;
-                    }
-                    if (tokens[i] == '-' && !IsOperator(tokens[i - 1]) && !(tokens[i-1] == '(')) {
-                        tokens.RemoveAt(i);
-                        break;
-                    }
-                }
-                if (i == 0 && char.IsNumber(tokens[i])) {
-                    tokens.Insert(0, '-');
-                    break;
+            bool isDigit = IsDigitCheck(digits.Last());
+
+            if (digits.Count > 3) {
+                int index = digits.Count - 1;
+
+                if (digits[index] == ")" && digits[index - 2] == "-" && digits[index - 3] == "(") {
+                    digits.RemoveAt(index);
+                    digits.RemoveAt(index - 2);
+                    digits.RemoveAt(index - 3);
+                    output = RecombineString(digits);
                 }
             }
 
-            foreach (char item in tokens) {
-                output += item;
+            if (isDigit) {
+                int index = digits.Count - 1;
+
+                if (index == 1 && digits[index - 1] == "(") {
+                    digits.Add(")");
+                    digits.Insert(index, "-");
+                    output = RecombineString(digits);
+                } else if (index > 2 && digits[index - 1] == "-" && digits[index - 2] == "(") {
+                    digits.RemoveAt(index - 1);
+                    output = RecombineString(digits);
+                } else if (index > 1 && !IsDigitCheck(digits[index - 1])) {
+                    digits.Add(")");
+                    digits.Insert(index, "-");
+                    digits.Insert(index, "(");
+                    output = RecombineString(digits);
+                }
             }
-            
+
             return output;
         }
 
-        private bool IsOperator(char value) {
-            return (value == ')' || value == '*' || value == '/' || value == '+' || value == '^');
+        private string RecombineString(List<string> list) {
+            string output = "";
+            foreach (string item in list) {
+                output += item;
+            }
+            return output;
+        }
+
+        private bool IsDigitCheck(string input) {
+            return (int.TryParse(input, out _) || double.TryParse(input, out _) || decimal.TryParse(input, out _));
+        }
+
+        public List<string> Tokenize(string inputString) {
+            string @pattern = @"[\d]+\.?[\d]*|[-/\+\*\(\)\^]";
+            Regex rgx = new Regex(@pattern);
+            MatchCollection matches = Regex.Matches(inputString, @pattern);
+
+            return matches.Cast<Match>().Select(match => match.Value).ToList();
+        }
+
+        private bool IsOperator(string value) {
+            return (value == ")" || value == "*" || value == "/" || value == "+" || value == "^" || value == "-");
         }
 
         private bool IsArithmeticOperator(char value) {
