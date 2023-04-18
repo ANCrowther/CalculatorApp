@@ -157,8 +157,8 @@ namespace CalculatorMauiGUI.ViewModels
         }
 
         private string ChangeDigitSign() {
-            string output = "";
             List<string> digits = Tokenize(Entry);
+            string output = RecombineString(digits);
 
             if (digits.Count == 1 && IsDigitCheck(digits[0])) {
                 digits.Add(")");
@@ -167,11 +167,9 @@ namespace CalculatorMauiGUI.ViewModels
                 return RecombineString(digits);
             }
 
-            bool isDigit = IsDigitCheck(digits.Last());
-
+            //bool isDigit = IsDigitCheck(digits.Last());
+            int index = digits.Count - 1;
             if (digits.Count > 3) {
-                int index = digits.Count - 1;
-
                 if (digits[index] == ")" && digits[index - 2] == "-" && digits[index - 3] == "(") {
                     digits.RemoveAt(index);
                     digits.RemoveAt(index - 2);
@@ -180,9 +178,7 @@ namespace CalculatorMauiGUI.ViewModels
                 }
             }
 
-            if (isDigit) {
-                int index = digits.Count - 1;
-
+            if (IsDigitCheck(digits.Last())) {
                 if (index == 1 && digits[index - 1] == "(") {
                     digits.Add(")");
                     digits.Insert(index, "-");
