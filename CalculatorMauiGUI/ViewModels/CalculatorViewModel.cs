@@ -167,8 +167,9 @@ namespace CalculatorMauiGUI.ViewModels
                 return RecombineString(digits);
             }
 
-            //bool isDigit = IsDigitCheck(digits.Last());
+            bool isDigit = IsDigitCheck(digits.Last());
             int index = digits.Count - 1;
+
             if (digits.Count > 3) {
                 if (digits[index] == ")" && digits[index - 2] == "-" && digits[index - 3] == "(") {
                     digits.RemoveAt(index);
@@ -178,7 +179,7 @@ namespace CalculatorMauiGUI.ViewModels
                 }
             }
 
-            if (IsDigitCheck(digits.Last())) {
+            if (isDigit) {
                 if (index == 1 && digits[index - 1] == "(") {
                     digits.Add(")");
                     digits.Insert(index, "-");
