@@ -1,6 +1,7 @@
 using ShuntingYardLibrary;
 using ShuntingYardLibrary.Nodes;
 using ShuntingYardLibrary.Utilities;
+using System.Collections.Generic;
 using Xunit;
 
 namespace TestProject;
@@ -111,10 +112,10 @@ public class UnitTest1 {
 
     [Fact]
     public void TestPostFix() {
-        Assert.Equal("60 4 +", PostFix.PostFixTraversal("60+4"));
-        Assert.Equal("2 6 ^", PostFix.PostFixTraversal("2^6"));
-        Assert.Equal("42 6 + 2 / (", PostFix.PostFixTraversal("(42+6)/2"));
-        Assert.Equal("2 1 + 2 ^ 3 / (", PostFix.PostFixTraversal("(2+1)^2/3"));
+        Assert.Equal("60 4 +", PostFix.Traversal("60+4"));
+        Assert.Equal("2 6 ^", PostFix.Traversal("2^6"));
+        Assert.Equal("42 6 + 2 / (", PostFix.Traversal("(42+6)/2"));
+        Assert.Equal("2 1 + 2 ^ 3 / (", PostFix.Traversal("(2+1)^2/3"));
     }
 
     [Theory]
@@ -126,14 +127,23 @@ public class UnitTest1 {
     [InlineData("(1 + 2 + 1)^4 / 4")]
     [InlineData("(((2+12)^2+68)/5.5)+16")]
     public void TestExpressionTreeEvaluation(string inputValue) {
-        Assert.Equal(64, ExpressionTree.Evaluate(inputValue));
+        Assert.Equal("64", ExpressionTree.Evaluate(inputValue));
+    }
+
+    [Fact]
+    public void TestExpressionTreeNegativeEvaluation() {
+        List<string> output = Infix.Traversal("(-62)");
+        Assert.Equal("(", output[0]);
+        Assert.Equal("0", output[1]);
+        Assert.Equal("-", output[2]);
+        Assert.Equal("62", output[3]);
+        Assert.Equal(")", output[4]);
     }
 
     [Theory]
-    [InlineData("-5+9")]
-    [InlineData("16^-2")]
-    [InlineData("-16/-4")]
+    [InlineData("(-5)+9")]
+    [InlineData("(-16)/(-4)")]
     public void TestExpressionTreeNegativeNumbersEvaluation(string inputValue) {
-        Assert.Equal(4, ExpressionTree.Evaluate(inputValue));
+        Assert.Equal("4", ExpressionTree.Evaluate(inputValue));
     }
 }

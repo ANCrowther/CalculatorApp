@@ -3,7 +3,7 @@
 using ShuntingYardLibrary;
 
 Console.WriteLine("Hello, World!");
-decimal answer = ExpressionTree.Evaluate("(2+1)^2/3");
+string answer = ExpressionTree.Evaluate("(2+1)^2/3");
 Console.WriteLine($"correct: 3, actual: {answer}");
 answer = ExpressionTree.Evaluate("1746.45627 - 844.78763");
 Console.WriteLine($"correct: 901.66864, actual: {answer}");

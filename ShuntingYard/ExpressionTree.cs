@@ -3,12 +3,17 @@ using ShuntingYardLibrary.Utilities;
 
 namespace ShuntingYardLibrary;
 
-// All the code in this file is included in all platforms.
 public static class ExpressionTree {
+    /// <summary>
+    /// Evaluates the Entry string from GUI.
+    /// </summary>
+    /// <param name="inputValue">String formula from GUI.</param>
+    /// <returns>String answer to formula.</returns>
     public static string Evaluate(string inputValue) {
         INode rootNode;
+
         try {
-            rootNode = CompileTree(PostFix.PostFixTraversal(inputValue));
+            rootNode = CompileTree(PostFix.Traversal(inputValue));
         } catch (ArgumentException) {
             return ErrorMessages.Mismatch;
         }
@@ -18,13 +23,18 @@ public static class ExpressionTree {
         } catch (DivideByZeroException) {
             return ErrorMessages.DivideByZero;
         } catch (Exception ex) {
-            return "ERR: Unknown";
+            return $"ERR: {ex.Message}";
         }
     }
 
+    /// <summary>
+    /// Creates a binary tree to solve the formula.
+    /// </summary>
+    /// <param name="inputString">Postfix string.</param>
+    /// <returns>RootNode holding the answer.</returns>
     private static INode CompileTree(string inputString) {
         var tokenList = TokenManager.Tokenize(inputString);
-        Stack<INode> nodeStack = new Stack<INode>();
+        Stack<INode> nodeStack = new();
 
         foreach (string token in tokenList) {
             INode node = NodeGenerator.MakeNode(token);

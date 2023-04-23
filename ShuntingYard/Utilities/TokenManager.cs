@@ -2,6 +2,11 @@
 
 namespace ShuntingYardLibrary.Utilities;
 internal class TokenManager {
+    /// <summary>
+    /// Breaks apart the inputString to its component parts.
+    /// </summary>
+    /// <param name="inputString">String formula</param>
+    /// <returns>List of component parts.</returns>
     public static List<string> Tokenize(string inputString) {
         string @pattern = @"[\d]+\.?[\d]*|[-/\+\*\(\)\^]";
         Regex rgx = new Regex(@pattern);

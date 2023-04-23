@@ -13,10 +13,16 @@ public static class PostFix {
         [')'] = 100
     };
 
-    public static string PostFixTraversal(string inputString) {
-        inputString = inputString.Replace(" ", string.Empty);
+    /// <summary>
+    /// Converts the infix string formula to postfix.
+    /// </summary>
+    /// <param name="inputString">String infix formula.</param>
+    /// <returns>String postfix formula.</returns>
+    /// <exception cref="ArgumentException">Mismatching parenthesis exception.</exception>
+    /// <exception cref="FormatException">Invalid token exception.</exception>
+    public static string Traversal(string inputString) {
         int parenthesisCount = 0;
-        var list = TokenManager.Tokenize(inputString);
+        var list = Infix.Traversal(inputString);
 
         Stack<char> operatorStack = new Stack<char>();
         Queue<string> numberQueue = new Queue<string>(list.Capacity);
