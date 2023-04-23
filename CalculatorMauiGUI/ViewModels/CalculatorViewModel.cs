@@ -38,8 +38,17 @@ namespace CalculatorMauiGUI.ViewModels
                 }
             }
             get {
-                return answer;
+                if (NoDecimalUsedInNumber(answer)) {
+                    return answer;
+                } else {
+                    return ConvertToScientificNotation(answer);
+                }
             }
+        }
+
+        private string ConvertToScientificNotation(string input) {
+            decimal nums = Convert.ToDecimal(input);
+            return string.Format("{0:#.######E+00}", nums);
         }
 
         public CalculatorViewModel()
@@ -95,7 +104,7 @@ namespace CalculatorMauiGUI.ViewModels
                     }
                 },
                 canExecute: (string arg) => {
-                    return !(arg == "." && !NoDecimalUsedInNumber());
+                    return !(arg == "." && !NoDecimalUsedInNumber(entry));
                 });
 
             NegativeDigitCommand = new Command(
@@ -137,10 +146,10 @@ namespace CalculatorMauiGUI.ViewModels
             }
         }
 
-        private bool NoDecimalUsedInNumber() {
+        private bool NoDecimalUsedInNumber(string input) {
             bool notUsed = true;
             List<char> tempString = new List<char>();
-            foreach (char item in Entry) {
+            foreach (char item in input) {
                 tempString.Add(item);
             }
 
