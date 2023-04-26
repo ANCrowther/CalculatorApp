@@ -110,14 +110,6 @@ public class UnitTest1 {
         Assert.Equal(1, node.Evaluate());
     }
 
-    [Fact]
-    public void TestPostFix() {
-        Assert.Equal("60 4 +", PostFix.Traversal("60+4"));
-        Assert.Equal("2 6 ^", PostFix.Traversal("2^6"));
-        Assert.Equal("42 6 + 2 / (", PostFix.Traversal("(42+6)/2"));
-        Assert.Equal("2 1 + 2 ^ 3 / (", PostFix.Traversal("(2+1)^2/3"));
-    }
-
     [Theory]
     [InlineData("60+4")]
     [InlineData("120-56")]
@@ -131,13 +123,13 @@ public class UnitTest1 {
     }
 
     [Fact]
-    public void TestExpressionTreeNegativeEvaluation() {
-        List<string> output = Infix.Traversal("(-62)");
-        Assert.Equal("(", output[0]);
-        Assert.Equal("0", output[1]);
-        Assert.Equal("-", output[2]);
-        Assert.Equal("62", output[3]);
-        Assert.Equal(")", output[4]);
+    public void TestNegativeEvaluation1() {
+        Assert.Equal("-4", ExpressionTree.Evaluate("(-4)"));
+    }
+
+    [Fact]
+    public void TestNegativeEvaluation2() {
+        Assert.Equal("8", ExpressionTree.Evaluate("(4 + -2)^3"));
     }
 
     [Theory]
@@ -145,5 +137,66 @@ public class UnitTest1 {
     [InlineData("(-16)/(-4)")]
     public void TestExpressionTreeNegativeNumbersEvaluation(string inputValue) {
         Assert.Equal("4", ExpressionTree.Evaluate(inputValue));
+    }
+
+    [Fact]
+    public void TestInfixNodeCreation1() {
+        List<INode> temp = Infix.Compile("-2");
+        Assert.Equal(-1, temp[0].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.MultiplicationNode", temp[1].ToString());
+        Assert.Equal(2, temp[2].Evaluate());
+        OperatorNode answer = (OperatorNode)temp[1];
+        answer.LeftNode = temp[0];
+        answer.RightNode = temp[2];
+        Assert.Equal(-2, answer.Evaluate());
+    }
+
+    [Fact]
+    public void TestInfixNodeCreation2() {
+        List<INode> temp = Infix.Compile("-(2+2)");
+        Assert.Equal(-1, temp[0].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.MultiplicationNode", temp[1].ToString());
+        Assert.Equal("ShuntingYardLibrary.Nodes.OpenParenthesisNode", temp[2].ToString());
+        Assert.Equal(2, temp[3].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.AdditionNode", temp[4].ToString());
+        Assert.Equal(2, temp[5].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.ClosedParenthesisNode", temp[6].ToString());
+    }
+
+    [Fact]
+    public void TestPostFixNodeCreation1() {
+        List<INode> temp = PostFix.Compile("2+2");
+        Assert.Equal(2, temp[0].Evaluate());
+        Assert.Equal(2, temp[1].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.AdditionNode", temp[2].ToString());
+    }
+
+    [Fact]
+    public void TestPostFixNodeCreation2() {
+        List<INode> temp = PostFix.Compile("(42+6)/2"); // 42 6 + 2 /
+        Assert.Equal(42, temp[0].Evaluate());
+        Assert.Equal(6, temp[1].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.AdditionNode", temp[2].ToString());
+        Assert.Equal(2, temp[3].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.DivisionNode", temp[4].ToString());
+    }
+    [Fact]
+    public void TestPostFixNodeCreation3() {
+        List<INode> temp = PostFix.Compile("((4+2)/(4-1))^3"); // 4 2 + 4 1 - / 3 ^
+        Assert.Equal(4, temp[0].Evaluate());
+        Assert.Equal(2, temp[1].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.AdditionNode", temp[2].ToString());
+        Assert.Equal(4, temp[3].Evaluate());
+        Assert.Equal(1, temp[4].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.SubtractionNode", temp[5].ToString());
+        Assert.Equal("ShuntingYardLibrary.Nodes.DivisionNode", temp[6].ToString());
+        Assert.Equal(3, temp[7].Evaluate());
+        Assert.Equal("ShuntingYardLibrary.Nodes.ExponentNode", temp[8].ToString());
+    }
+
+    [Fact]
+    public void TestPostFixNodeCreation4() {
+        string output = ExpressionTree.Evaluate("((4+2)/(4-1))^3");
+        Assert.Equal("8", output);
     }
 }

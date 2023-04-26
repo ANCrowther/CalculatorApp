@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using ShuntingYardLibrary.Nodes;
 
 namespace ShuntingYardLibrary.Utilities;
 public static class PostFix {
@@ -14,53 +14,47 @@ public static class PostFix {
     };
 
     /// <summary>
-    /// Converts the infix string formula to postfix.
+    /// Converts the infix string formula to postfix list.
     /// </summary>
-    /// <param name="inputString">String infix formula.</param>
-    /// <returns>String postfix formula.</returns>
+    /// <param name="input">String infix formula.</param>
+    /// <returns>List of nodes in postfix format.</returns>
     /// <exception cref="ArgumentException">Mismatching parenthesis exception.</exception>
     /// <exception cref="FormatException">Invalid token exception.</exception>
-    public static string Traversal(string inputString) {
+    public static List<INode> Compile(string input) {
+        List<INode> list = Infix.Compile(input);
+        Stack<INode> operatorStack = new();
+        Queue<INode> numberQueue = new(list.Capacity);
         int parenthesisCount = 0;
-        var list = Infix.Traversal(inputString);
 
-        Stack<char> operatorStack = new Stack<char>();
-        Queue<string> numberQueue = new Queue<string>(list.Capacity);
-
-        foreach (string token in list) {
-            if (int.TryParse(token, out _) ||
-                double.TryParse(token, out _) ||
-                decimal.TryParse(token, out _) ||
-                Regex.Match(token, @"[A-Za-z]+[0-9]+").Success) {
-                numberQueue.Enqueue(token);
+        foreach (INode node in list) {
+            if (node is NumberNode) {
+                numberQueue.Enqueue(node);
             } else {
-                if (operators.Contains(token[0])) {
-                    while (operatorStack.Count != 0 &&
-                          operatorPrecedence[operatorStack.Peek()] > operatorPrecedence[token[0]]) {
-                        numberQueue.Enqueue(operatorStack.Pop().ToString());
+                if (operators.Contains((node as OperatorNode).Precedence)) {
+                    while (operatorStack.Count != 0 && (operatorPrecedence[(operatorStack.Peek() as OperatorNode).Precedence] > operatorPrecedence[(node as OperatorNode).Precedence])) {
+                        numberQueue.Enqueue(operatorStack.Pop());
                     }
-                    operatorStack.Push(token[0]);
-                } else if (token.StartsWith("(")) {
+                    operatorStack.Push(node);
+                } else if (node is OpenParenthesisNode) {
                     parenthesisCount++;
-                    operatorStack.Push(token[0]);
-                } else if (token.StartsWith(")")) {
+                    operatorStack.Push(node);
+                } else if (node is ClosedParenthesisNode) {
                     parenthesisCount--;
                     try {
-                        while (operatorStack.Peek() != '(') {
-                            numberQueue.Enqueue(operatorStack.Pop().ToString());
+                        while (!(operatorStack.Peek() is OpenParenthesisNode)) {
+                            numberQueue.Enqueue(operatorStack.Pop());
                         }
+                        operatorStack.Pop();
                     } catch (Exception) {
                         throw new ArgumentException(ErrorMessages.Mismatch);
                     }
-                } else {
-                    throw new FormatException(string.Format(ErrorMessages.InvalidToken, token));
                 }
             }
         }
 
         while (operatorStack.Count > 0) {
-            if (operatorStack.Peek() != '(' || operatorStack.Peek() != ')') {
-                numberQueue.Enqueue(operatorStack.Pop().ToString());
+            if (!(operatorStack.Peek() is OpenParenthesisNode) || !(operatorStack.Peek() is ClosedParenthesisNode)) {
+                numberQueue.Enqueue(operatorStack.Pop());
             }
         }
 
@@ -68,6 +62,6 @@ public static class PostFix {
             throw new ArgumentException(ErrorMessages.Mismatch);
         }
 
-        return String.Join(" ", numberQueue.ToArray());
+        return numberQueue.ToList();
     }
 }

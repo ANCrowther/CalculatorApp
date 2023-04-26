@@ -1,4 +1,6 @@
-﻿namespace ShuntingYardLibrary.Utilities;
+﻿using ShuntingYardLibrary.Nodes;
+
+namespace ShuntingYardLibrary.Utilities;
 public static class Infix {
     /// <summary>
     /// Takes the input string from the GUI, checks for negative numbers '(-x)' and adds a '0' => '(0-x)'
@@ -6,27 +8,32 @@ public static class Infix {
     /// </summary>
     /// <param name="input">Entry from the GUI.</param>
     /// <returns>Token list of the input.</returns>
-    public static List<string> Traversal(string input) {
+    public static List<INode> Compile(string input) {
         input = input.Replace(" ", string.Empty);
         List<string> list = TokenManager.Tokenize(input);
-        List<string> output = new();
-        bool isOpenParenthesis = false;
+        List<INode> output = new();
 
         for (int i = 0; i < list.Count; i++) {
-            if (list[i] == "(") {
-                isOpenParenthesis = true;
-                output.Add(list[i]);
-            }else if (isOpenParenthesis == true && list[i] == "-") {
-                output.Add("0");
-                output.Add(list[i]);
-                isOpenParenthesis = false;
-            } else if (isOpenParenthesis == true && list[i] != "-") {
-                isOpenParenthesis = false;
-                output.Add(list[i]);
+            if (i == 0 && list[i] == "-") {
+                output.Add(NodeGenerator.MakeNode("-1"));
+                output.Add(NodeGenerator.MakeNode("*"));
+            } else if (list[i] == "-" && IsNotNumber(list[i - 1])) {
+                output.Add(NodeGenerator.MakeNode("-1"));
+                output.Add(NodeGenerator.MakeNode("*"));
             } else {
-                output.Add(list[i]);
+                output.Add(NodeGenerator.MakeNode(list[i]));
             }
         }
+
         return output;
+    }
+
+    /// <summary>
+    /// Checks if input is a number.
+    /// </summary>
+    /// <param name="value">String input of current token.</param>
+    /// <returns>Boolean.</returns>
+    private static bool IsNotNumber(string value) {
+        return !(int.TryParse(value, out _) && double.TryParse(value, out _) && decimal.TryParse(value, out _));
     }
 }

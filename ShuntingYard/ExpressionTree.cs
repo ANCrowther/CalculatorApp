@@ -13,7 +13,7 @@ public static class ExpressionTree {
         INode rootNode;
 
         try {
-            rootNode = CompileTree(PostFix.Traversal(inputValue));
+            rootNode = Compile(PostFix.Compile(inputValue));
         } catch (ArgumentException) {
             return ErrorMessages.Mismatch;
         }
@@ -30,16 +30,16 @@ public static class ExpressionTree {
     /// <summary>
     /// Creates a binary tree to solve the formula.
     /// </summary>
-    /// <param name="inputString">Postfix string.</param>
-    /// <returns>RootNode holding the answer.</returns>
-    private static INode CompileTree(string inputString) {
-        var tokenList = TokenManager.Tokenize(inputString);
+    /// <param name="inputs">List of PostFix nodes.</param>
+    /// <returns>Remaining node holding the answer.</returns>
+    private static INode Compile(List<INode> inputs) {
+        var tokens = inputs;
         Stack<INode> nodeStack = new();
 
-        foreach (string token in tokenList) {
-            INode node = NodeGenerator.MakeNode(token);
-
-            switch (node) {
+        foreach (INode token in tokens) { 
+            switch(token) {
+                case OpenParenthesisNode _:
+                    break;
                 case OperatorNode opNode:
                     INode right = nodeStack.Pop();
                     INode left = nodeStack.Pop();
@@ -48,13 +48,12 @@ public static class ExpressionTree {
                     nodeStack.Push(opNode);
                     break;
                 case NumberNode _:
-                    nodeStack.Push(node);
+                    nodeStack.Push(token);
                     break;
                 default:
                     break;
             }
         }
-
         return nodeStack.Pop();
     }
 }

@@ -190,37 +190,36 @@ namespace CalculatorMauiGUI.ViewModels
         private string ChangeDigitSign() {
             List<string> digits = Tokenize(Entry);
 
-            // Handles turning the 1st number into a negative
-            if (digits.Count == 1 && IsDigitCheck(digits[0])) {
-                digits.Add(")");
-                digits.Insert(0, "-");
-                digits.Insert(0, "(");
+            if (digits.Count == 0) {
+                return "";
+            }
+
+            if (!IsDigitCheck(digits.Last())) {
                 return string.Join("", digits.ToArray());
             }
 
-            bool isDigit = IsDigitCheck(digits.Last());
-            int index = digits.Count - 1;
-
-            //Turns a negative number into positive.
-            if (digits.Count > 3) {
-                if (digits[index] == ")" && digits[index - 2] == "-" && digits[index - 3] == "(") {
-                    digits.RemoveAt(index);
-                    digits.RemoveAt(index - 2);
-                    digits.RemoveAt(index - 3);
-                }
+            if (digits.Count == 1 && IsDigitCheck(digits[0])) {
+                digits.Insert(0, "-");
+                return string.Join("", digits.ToArray());
             }
 
-            //Turns the last number in formula into a negative number.
-            if (isDigit) {
-                if (index == 1 && digits[index - 1] == "(") {
-                    digits.Add(")");
-                    digits.Insert(index, "-");
-                } else if (index > 2 && digits[index - 1] == "-" && digits[index - 2] == "(") {
-                    digits.RemoveAt(index - 1);
-                } else if (index > 1 && !IsDigitCheck(digits[index - 1])) {
-                    digits.Add(")");
-                    digits.Insert(index, "-");
-                    digits.Insert(index, "(");
+            if (IsDigitCheck(digits.Last())) {
+                int i = digits.Count - 1;
+
+                while (i > 0 && IsDigitCheck(digits[i])) {
+                    i--;
+                }
+
+                if (i == 1 && IsDigitCheck(digits[i])) { // 3 => -3
+                    digits.Insert(0, "-");
+                } else if (i == 0 && digits[0] == "-") { // -3 => 3
+                    digits.RemoveAt(0);
+                } else if (i > 0 && IsDigitCheck(digits[i - 1])) { // 4+3 => 4+-3
+                    digits.Insert(i + 1, "-");
+                } else if (i > 2 && digits[i - 1] == ")") { // (2+3)-3 => (2+3)--3
+                    digits.Insert(i + 1, "-");
+                } else if (i > 1 && digits[i] == "-" &&!IsDigitCheck(digits[i - 1])) { // 4+-3 => 4+3
+                    digits.RemoveAt(i);
                 }
             }
 

@@ -9,11 +9,13 @@ public static class OperationsNodeFactory
     /// <param name="inputString">String operator to be converted.</param>
     /// <returns>Operator node.</returns>
     public static OperatorNode MakeNode(string inputString) => inputString switch {
-        "+" => new AdditionNode(),
-        "-" => new SubtractionNode(),
-        "*" => new MultiplicationNode(),
-        "/" => new DivisionNode(),
-        "^" => new ExponentNode(),
+        "+" => new AdditionNode() { Precedence = '+'},
+        "-" => new SubtractionNode() { Precedence = '-' },
+        "*" => new MultiplicationNode() { Precedence = '*' },
+        "/" => new DivisionNode() { Precedence = '/' },
+        "^" => new ExponentNode() { Precedence = '^' },
+        "(" => new OpenParenthesisNode() { Precedence = '(' },
+        ")" => new ClosedParenthesisNode() { Precedence = ')' },
         _ => null,
     };
 }
