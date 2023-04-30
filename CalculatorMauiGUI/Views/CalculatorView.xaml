@@ -191,7 +191,7 @@
                     BackgroundColor="CadetBlue"
                     Command="{Binding DigitCommand}" 
                     CommandParameter="."/>
-            <Button Text="y^x" 
+            <Button Text="x&#x02B8;" 
                     Grid.Row="3" 
                     Grid.Column="3"
                     BackgroundColor="SteelBlue"

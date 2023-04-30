@@ -1,5 +1,4 @@
 ﻿using CalculatorGUI.Data;
-using Microsoft.AspNetCore.Components.WebView.Maui;
 
 namespace CalculatorGUI;
 public static class MauiProgram {

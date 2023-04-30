@@ -4,47 +4,45 @@
 
 <h1>Calculator</h1>
 
-<p> Input: @CalculatorLogic.input</p>
-<p>Answer: @CalculatorLogic.output</p>
+<p> Input: @CalculatorLogic.Entry</p>
+<p>Answer: @CalculatorLogic.Answer</p>
 
 <p>
-    <button class="btn btn-dark" style="font-size: 20px; width: 80px; margin-right: 3px" id="CLR" @onclick="CalculatorLogic.ClickClear"> CLR </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 80px; margin-right: 3px" @onclick="CalculatorLogic.ClickBackSpace"> BS </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 80px" @onclick="CalculatorLogic.ClickSaveAnswer"> ANS </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 100px; margin-right: 3px" @onclick="CalculatorLogic.ClearInput"> CLR </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 100px; margin-right: 3px" @onclick="CalculatorLogic.Backspace"> &#x21E6; </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 100px" @onclick="CalculatorLogic.SaveAnswer"> ANS </button>
 </p>
 <p>
-    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickExponent"> x^y </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickOpenParenthesis"> ( </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickClosedParenthesis"> ) </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickDivision"> / </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('7'.ToString()))"> 7 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('8'.ToString()))"> 8 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('9'.ToString()))"> 9 </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('('.ToString()))"> ( </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(')'.ToString()))"> ) </button>
 </p>
 <p>
-    <button name="7" class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickSeven"> 7 </button>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickEight"> 8 </button>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickNine"> 9 </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickMultiplication"> * </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('4'.ToString()))"> 4 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('5'.ToString()))"> 5 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('6'.ToString()))"> 6 </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('*'.ToString()))"> &#215; </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('/'.ToString()))"> ÷ </button>
+</p>
+<p>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('1'.ToString()))"> 1 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('2'.ToString()))"> 2 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('3'.ToString()))"> 3 </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('+'.ToString()))"> + </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('-'.ToString()))"> - </button>
+</p>
+<p>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ChangeDigitSign"> +/- </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('0'.ToString()))"> 0 </button>
+    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('.'.ToString()))"> . </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('^'.ToString()))"> x&#x02B8; </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.GetAnswer"> = </button>
 
 </p>
-<p>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickFour"> 4 </button>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickFive"> 5 </button>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickSix"> 6 </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickSubtraction"> - </button>
-</p>
-<p>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickOne"> 1 </button>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickTwo"> 2 </button>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickThree"> 3 </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickAddition"> + </button>
 
-</p>
-<p>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickPlusOrMinus"> +/- </button>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickZero"> 0 </button>
-    <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickDecimal"> . </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClickEquals" type="button"> = </button>
 
-</p>
 
 @code {
     

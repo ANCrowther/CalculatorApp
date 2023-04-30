@@ -91,7 +91,7 @@ namespace CalculatorMauiGUI.ViewModels
                         backspace();
                     }
                     // This check prevents the user from starting formula with anything other than a number or '('.
-                    if (IsOperator() && arg != "(") {
+                    if (IsOperator() && Entry[0] != '-' && arg != "(") {
                         Entry = "0";
                     }
                     RefreshCanExecutes();
@@ -183,8 +183,6 @@ namespace CalculatorMauiGUI.ViewModels
 
         /// <summary>
         /// Takes the most recent digit in the formula and changes its +/-.
-        /// If changing to '-', then adds parenthesis '(-x)'.
-        /// If changing to '+', then removes parenthesis and negative sign 'x'.
         /// </summary>
         /// <returns>Returns the new Entry string.</returns>
         private string ChangeDigitSign() {

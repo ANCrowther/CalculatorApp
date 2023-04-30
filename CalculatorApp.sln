@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculatorGUI", "CalculatorGUI\CalculatorGUI.csproj", "{758F7A9A-66C3-4A01-837B-9D920B3FA6DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorMauiGUI", "CalculatorMauiGUI\CalculatorMauiGUI.csproj", "{731A6D84-7BDA-4E88-AAB7-2FD64597BC97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculatorMauiGUI", "CalculatorMauiGUI\CalculatorMauiGUI.csproj", "{731A6D84-7BDA-4E88-AAB7-2FD64597BC97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{13B7BE76-D77F-48E9-834B-8727A2852AA7}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
