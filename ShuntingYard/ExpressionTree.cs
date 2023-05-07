@@ -38,7 +38,10 @@ public static class ExpressionTree {
 
         foreach (INode token in tokens) { 
             switch(token) {
-                case OpenParenthesisNode _:
+                case FunctionNode trigNode:
+                    INode xNode = nodeStack.Pop();
+                    trigNode.XNode = xNode;
+                    nodeStack.Push(trigNode);
                     break;
                 case OperatorNode opNode:
                     INode right = nodeStack.Pop();

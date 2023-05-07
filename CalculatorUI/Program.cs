@@ -5,10 +5,19 @@ using ShuntingYardLibrary.Nodes;
 using ShuntingYardLibrary.Utilities;
 
 Console.WriteLine("Hello, World!");
-//string answer = ExpressionTree.Evaluate("(2+1)^2/3");
-//Console.WriteLine($"correct: 3, actual: {answer}");
-//answer = ExpressionTree.Evaluate("1746.45627 - 844.78763");
-//Console.WriteLine($"correct: 901.66864, actual: {answer}");
+string answer = ExpressionTree.Evaluate("sin(45) + cos(45)");
+Console.WriteLine($"correct: 1, actual: {answer}");
+List<INode> postFix = PostFix.Compile("sin(45) + cos(45)");
+foreach (INode node in postFix) {
+    if (node is NumberNode) {
+        Console.WriteLine($"{node.Evaluate()}");
+    } else {
+        Console.WriteLine(node.ToString());
+    }
+}
+
+answer = ExpressionTree.Evaluate("cos(0)/2");
+Console.WriteLine($"correct: 0.5, actual: {answer}");
 //answer = ExpressionTree.Evaluate("8762.984 / 24.6743");
 //Console.WriteLine($"correct: 355.14620475555537543111658689, actual: {answer}");
 //answer = ExpressionTree.Evaluate("2.5 ^ 3");
@@ -16,8 +25,8 @@ Console.WriteLine("Hello, World!");
 //answer = ExpressionTree.Evaluate("10 / (2 + 3)");
 //Console.WriteLine($"correct: 2, actual: {answer}");
 
-List<INode> postFix = PostFix.Compile("((4+2)/(4-1))^3");
-foreach (INode node in postFix) {
+List<INode> postFix1 = PostFix.Compile("cos(0) / 2");
+foreach (INode node in postFix1) {
     if (node is NumberNode) {
         Console.WriteLine($"{node.Evaluate()}");
     } else {

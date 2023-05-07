@@ -1,4 +1,5 @@
 ﻿using ShuntingYardLibrary.Nodes;
+using System.ComponentModel.Design;
 
 namespace ShuntingYardLibrary.Utilities;
 public static class PostFix {
@@ -29,9 +30,11 @@ public static class PostFix {
         foreach (INode node in list) {
             if (node is NumberNode) {
                 numberQueue.Enqueue(node);
-            } else {
+            } else if (node is FunctionNode) {
+                operatorStack.Push(node);
+            } else{
                 if (operators.Contains((node as OperatorNode).Precedence)) {
-                    while (operatorStack.Count != 0 && (operatorPrecedence[(operatorStack.Peek() as OperatorNode).Precedence] > operatorPrecedence[(node as OperatorNode).Precedence])) {
+                    while (operatorStack.Count != 0 && !(operatorStack.Peek() is FunctionNode) && (operatorPrecedence[(operatorStack.Peek() as OperatorNode).Precedence] > operatorPrecedence[(node as OperatorNode).Precedence])) {
                         numberQueue.Enqueue(operatorStack.Pop());
                     }
                     operatorStack.Push(node);
@@ -45,6 +48,9 @@ public static class PostFix {
                             numberQueue.Enqueue(operatorStack.Pop());
                         }
                         operatorStack.Pop();
+                        if (operatorStack.Peek() is FunctionNode) {
+                            numberQueue.Enqueue(operatorStack.Pop());
+                        }
                     } catch (Exception) {
                         throw new ArgumentException(ErrorMessages.Mismatch);
                     }
