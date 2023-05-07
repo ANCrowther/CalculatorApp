@@ -194,7 +194,7 @@ public static class CalculatorLogic {
     /// <param name="inputString">Entry</param>
     /// <returns>Regex list.</returns>
     private static List<string> Tokenize(string inputString) {
-        string @pattern = @"[\d]+\.?[\d]*|[-/\+\*\(\)\^]";
+        string @pattern = @"[\d]+\.?[\d]*|[A-Za-z]+|[-/\+\*\(\)\^]";
         Regex rgx = new Regex(@pattern);
         MatchCollection matches = Regex.Matches(inputString, @pattern);
 

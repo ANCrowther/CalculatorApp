@@ -34,6 +34,6 @@ public static class Infix {
     /// <param name="value">String input of current token.</param>
     /// <returns>Boolean.</returns>
     private static bool IsNotNumber(string value) {
-        return !(int.TryParse(value, out _) && double.TryParse(value, out _) && decimal.TryParse(value, out _));
+        return !(int.TryParse(value, out _) || double.TryParse(value, out _) || decimal.TryParse(value, out _));
     }
 }
