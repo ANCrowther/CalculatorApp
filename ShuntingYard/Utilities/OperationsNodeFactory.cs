@@ -9,7 +9,7 @@ public static class OperationsNodeFactory
     /// <param name="inputString">String operator to be converted.</param>
     /// <returns>Operator node.</returns>
     public static OperatorNode MakeNode(string inputString) => inputString switch {
-        "+" => new AdditionNode() { Precedence = '+'},
+        "+" => new AdditionNode() { Precedence = '+' },
         "-" => new SubtractionNode() { Precedence = '-' },
         "*" => new MultiplicationNode() { Precedence = '*' },
         "/" => new DivisionNode() { Precedence = '/' },
