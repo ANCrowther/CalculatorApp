@@ -1,5 +1,5 @@
 ﻿namespace ShuntingYardLibrary.Nodes;
-public class SineNode : FunctionNode {
+public class SinNode : FunctionNode {
     public override decimal Evaluate() {
         return (decimal)Math.Sin((double)this.XNode.Evaluate());
     }

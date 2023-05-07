@@ -16,6 +16,7 @@ public static class OperationsNodeFactory
         "^" => new ExponentNode() { Precedence = '^' },
         "(" => new OpenParenthesisNode() { Precedence = '(' },
         ")" => new ClosedParenthesisNode() { Precedence = ')' },
+        "%" => new ModulusNode() { Precedence = '%' },
         _ => null,
     };
 }

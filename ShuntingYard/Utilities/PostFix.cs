@@ -1,15 +1,15 @@
 ﻿using ShuntingYardLibrary.Nodes;
-using System.ComponentModel.Design;
 
 namespace ShuntingYardLibrary.Utilities;
 public static class PostFix {
-    static HashSet<char> operators = new HashSet<char>(new char[] { '+', '-', '*', '/', '^' });
+    static HashSet<char> operators = new HashSet<char>(new char[] { '+', '-', '*', '/', '%', '^' });
     static Dictionary<char, int> operatorPrecedence = new Dictionary<char, int> {
         ['('] = 0,
         ['+'] = 10,
         ['-'] = 10,
         ['*'] = 20,
         ['/'] = 20,
+        ['%'] = 20,
         ['^'] = 50,
         [')'] = 100
     };

@@ -45,6 +45,14 @@ public static class CalculatorLogic {
         }
     }
 
+    public static void FactorialCommand() {
+        if (char.IsDigit(Entry.Last())) {
+
+        } else {
+
+        }
+    }
+
     /// <summary>
     /// Calls the PlusMinusDigit method to change the sign of the most recent digit.
     /// </summary>
@@ -109,7 +117,7 @@ public static class CalculatorLogic {
     /// <param name="value">Char value in Entry string</param>
     /// <returns>Boolean</returns>
     private static bool IsArithmeticOperator(char value) {
-        return (value == '*' || value == '/' || value == '+' || value == '^' || value == '-');
+        return (value == '*' || value == '/' || value == '+' || value == '^' || value == '-' || value == '%');
     }
 
     /// <summary>
@@ -117,7 +125,7 @@ public static class CalculatorLogic {
     /// </summary>
     /// <returns>Boolean</returns>
     private static bool IsOperator() {
-        List<char> operators = new List<char>() { ')', '*', '/', '+', '^', '-' };
+        List<char> operators = new List<char>() { ')', '*', '/', '+', '^', '-', '%' };
         bool output = false;
 
         foreach (char item in operators) {
@@ -194,7 +202,7 @@ public static class CalculatorLogic {
     /// <param name="inputString">Entry</param>
     /// <returns>Regex list.</returns>
     private static List<string> Tokenize(string inputString) {
-        string @pattern = @"[\d]+\.?[\d]*|[A-Za-z]+|[-/\+\*\(\)\^]";
+        string @pattern = @"[\d]+\.?[\d]*|[A-Za-z]+|[-/\+\*\(\)\^\%]";
         Regex rgx = new Regex(@pattern);
         MatchCollection matches = Regex.Matches(inputString, @pattern);
 

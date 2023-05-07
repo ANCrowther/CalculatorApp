@@ -8,10 +8,16 @@
 <p>Answer: @CalculatorLogic.Answer</p>
 
 <p>
-    <button class="btn btn-dark" style="font-size: 20px; width: 100px; margin-right: 3px" @onclick="CalculatorLogic.ClearInput"> CLR </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 100px; margin-right: 3px" @onclick="CalculatorLogic.Backspace"> &#x21E6; </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 100px" @onclick="CalculatorLogic.SaveAnswer"> ANS </button>
-    <button class="btn btn-dark" style="font-size: 20px; width: 100px" @onclick="(x => CalculatorLogic.DigitCommand(Math.PI.ToString()))"> &pi;</button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ClearInput"> CLR </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.Backspace"> &#x21E6; </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.SaveAnswer"> ANS </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('%'.ToString()))"> mod </button>
+    @space
+    @if (isSecond) {
+        <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="SecondRow"> hyp </button>
+    } else {
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="SecondRow"> hyp </button>
+    }
 </p>
 <p>
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('7'.ToString()))"> 7 </button>
@@ -19,6 +25,8 @@
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('9'.ToString()))"> 9 </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('('.ToString()))"> ( </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(')'.ToString()))"> ) </button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(Math.PI.ToString()))"> &pi;</button>
+    <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(Math.E.ToString()))"> e </button>
 </p>
 <p>
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('4'.ToString()))"> 4 </button>
@@ -26,6 +34,15 @@
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('6'.ToString()))"> 6 </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('*'.ToString()))"> &#215; </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('/'.ToString()))"> ÷ </button>
+    @space
+    @if (isSecond) {
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(sinh))"> sech </button>
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(sech))"> sinh </button>
+    } else {
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(sin))"> sin </button>
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(sec))"> sec </button>
+    }
+
 </p>
 <p>
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('1'.ToString()))"> 1 </button>
@@ -33,6 +50,15 @@
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('3'.ToString()))"> 3 </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('+'.ToString()))"> + </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('-'.ToString()))"> - </button>
+    @space
+    @if (isSecond) {
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(cosh))"> cosh </button>
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(csch))"> csch </button>
+    } else {
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(cos))"> cos </button>
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(csc))"> csc </button>
+    }
+
 </p>
 <p>
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.ChangeDigitSign"> +/- </button>
@@ -40,9 +66,35 @@
     <button class="btn btn-primary" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('.'.ToString()))"> . </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand('^'.ToString()))"> x&#x02B8; </button>
     <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="CalculatorLogic.GetAnswer"> = </button>
+    @space
+    @if (isSecond) {
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(tanh))"> tanh </button>
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(coth))"> coth </button>
+    } else {
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(tan))"> tan </button>
+        <button class="btn btn-dark" style="font-size: 20px; width: 60px" @onclick="(x => CalculatorLogic.DigitCommand(cot))"> cot </button>
+    }
 </p>
 
 
 @code {
+    private bool isSecond = false;
+    private string space = " ";
+    private string sin = "sin(";
+    private string cos = "cos(";
+    private string tan = "tan(";
+    private string sec = "sec(";
+    private string csc = "csc(";
+    private string cot = "cot(";
 
+    private string sinh = "sinh(";
+    private string cosh = "cosh(";
+    private string tanh = "tanh(";
+    private string sech = "sech(";
+    private string csch = "csch(";
+    private string coth = "coth(";
+
+    private void SecondRow() {
+        isSecond = !isSecond;
+    }
 }

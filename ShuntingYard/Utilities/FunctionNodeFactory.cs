@@ -3,9 +3,12 @@
 namespace ShuntingYardLibrary.Utilities;
 public static class FunctionNodeFactory {
     public static FunctionNode MakeNode(string inputString) => inputString switch {
-        "sin" => new SineNode(),
-        "cos" => new CosineNode(),
-        "tan" => new TangentNode(),
+        "sin" => new SinNode(),
+        "cos" => new CosNode(),
+        "tan" => new TanNode(),
+        "sec" => new SecNode(),
+        "csc" => new CscNode(),
+        "cot" => new CotNode(),
         _ => null
     };
 }

@@ -11,12 +11,12 @@ public static class NodeGenerator
     public static INode MakeNode(string inputString) {
 
         OperatorNode operatorNode = OperationsNodeFactory.MakeNode(inputString);
-        FunctionNode trigNode = FunctionNodeFactory.MakeNode(inputString);
+        FunctionNode functionNode = FunctionNodeFactory.MakeNode(inputString);
 
         if (operatorNode != null) {
             return operatorNode;
-        } else if (trigNode != null){
-            return trigNode;
+        } else if (functionNode != null){
+            return functionNode;
         } else {
             bool isDecimal = decimal.TryParse(inputString, out decimal value);
 

@@ -9,7 +9,7 @@ internal class TokenManager {
     /// <returns>List of component parts.</returns>
     public static List<string> Tokenize(string inputString) {
         //string @pattern = @"[\d]+\.?[\d]*|[-/\+\*\(\)\^]";
-        string @pattern = @"[\d]+\.?[\d]*|[A-Za-z]+|[-/\+\*\(\)\^]";
+        string @pattern = @"[\d]+\.?[\d]*|[A-Za-z]+|[-/\+\*\(\)\^\%]";
         Regex rgx = new Regex(@pattern);
         MatchCollection matches = Regex.Matches(inputString, @pattern);
 
