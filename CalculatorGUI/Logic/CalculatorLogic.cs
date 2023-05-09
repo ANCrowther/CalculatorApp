@@ -1,5 +1,4 @@
 ﻿using ShuntingYardLibrary;
-using System.Text.RegularExpressions;
 
 namespace CalculatorGUI.Logic;
 public static class CalculatorLogic {
@@ -32,7 +31,7 @@ public static class CalculatorLogic {
             Backspace();
         }
         // Prevent user adding arithmetic operators immediately after an '(' or another arithmetic operator.
-        if (Entry.Length > 1 && (IsArithmeticOperator(Entry[Entry.Length - 2]) || Entry[Entry.Length - 2] == '(') && IsArithmeticOperator(Entry[Entry.Length - 1])) {
+        if (Entry.Length > 1 && (Entry[Entry.Length - 2].IsArithmeticOperator() || Entry[Entry.Length - 2] == '(') && Entry[Entry.Length - 1].IsArithmeticOperator()) {
             Backspace();
         }
         // This check prevents the user from starting formula with anything other than a number or '('.
@@ -40,7 +39,7 @@ public static class CalculatorLogic {
             Entry = "0";
         }
         // Prevents multiple decimals in same number.
-        if (input == "." && IsDecimalUsedAlready(Entry)) {
+        if (input == "." && Entry.IsDecimalInRecentNumber()) {
             Backspace();
         }
     }
@@ -64,7 +63,8 @@ public static class CalculatorLogic {
     /// Removes the last element in the string.
     /// </summary>
     public static void Backspace() {
-        Entry = Entry.Substring(0, Entry.Length - 1);
+        int index = Entry.NewIndex();
+        Entry = Entry.Substring(0, index);
         if (Entry == "") {
             Entry = "0";
         }
@@ -85,39 +85,6 @@ public static class CalculatorLogic {
     public static void ClearInput() {
         Entry = "0";
         Answer = String.Empty;
-    }
-
-    /// <summary>
-    /// Checks if a decimal is already used in the most current number being entered.
-    /// </summary>
-    /// <param name="input">Entry</param>
-    /// <returns>Boolean</returns>
-    private static bool IsDecimalUsedAlready(string input) {
-        int count = 0;
-        List<char> tempString = new List<char>();
-        foreach (char item in input) {
-            tempString.Add(item);
-        }
-
-        for (int i = tempString.Count - 1; i >= 0; i--) {
-            if (tempString[i] == '.') {
-                count++;
-            }
-            //Check ensures method only looks at most recent number inputted.
-            if (!(char.IsNumber(tempString[i]) || tempString[i] == '.')) {
-                break;
-            }
-        }
-        return (count > 1);
-    }
-
-    /// <summary>
-    /// Checks for an arithmetic operator.
-    /// </summary>
-    /// <param name="value">Char value in Entry string</param>
-    /// <returns>Boolean</returns>
-    private static bool IsArithmeticOperator(char value) {
-        return (value == '*' || value == '/' || value == '+' || value == '^' || value == '-' || value == '%');
     }
 
     /// <summary>
@@ -149,7 +116,7 @@ public static class CalculatorLogic {
     /// </summary>
     /// <returns>Returns the new Entry string.</returns>
     private static string PlusMinusDigit() {
-        List<string> digits = Tokenize(Entry);
+        List<string> digits = Entry.Tokenize();
 
         if (digits.Count == 0) {
             return "";
@@ -194,18 +161,5 @@ public static class CalculatorLogic {
     /// <returns>Boolean</returns>
     private static bool IsDigitCheck(string input) {
         return (int.TryParse(input, out _) || double.TryParse(input, out _) || decimal.TryParse(input, out _));
-    }
-
-    /// <summary>
-    /// Converts Entry into a list of tokens for easier manipulation by ChangeDigitSign() method. 
-    /// </summary>
-    /// <param name="inputString">Entry</param>
-    /// <returns>Regex list.</returns>
-    private static List<string> Tokenize(string inputString) {
-        string @pattern = @"[\d]+\.?[\d]*|[A-Za-z]+|[-/\+\*\(\)\^\%]";
-        Regex rgx = new Regex(@pattern);
-        MatchCollection matches = Regex.Matches(inputString, @pattern);
-
-        return matches.Cast<Match>().Select(match => match.Value).ToList();
     }
 }

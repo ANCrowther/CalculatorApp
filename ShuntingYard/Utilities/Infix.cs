@@ -10,7 +10,7 @@ public static class Infix {
     /// <returns>Token list of the input.</returns>
     public static List<INode> Compile(string input) {
         input = input.Replace(" ", string.Empty);
-        List<string> list = TokenManager.Tokenize(input);
+        List<string> list = input.Tokenize();
         List<INode> output = new();
 
         for (int i = 0; i < list.Count; i++) {
