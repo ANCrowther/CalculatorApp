@@ -44,15 +44,15 @@ public static class PostFix {
                 } else if (node is ClosedParenthesisNode) {
                     parenthesisCount--;
                     try {
-                        while (!(operatorStack.Peek() is OpenParenthesisNode)) {
+                        while (operatorStack.Count > 1 && !(operatorStack.Peek() is OpenParenthesisNode)) {
                             numberQueue.Enqueue(operatorStack.Pop());
                         }
                         operatorStack.Pop();
-                        if (operatorStack.Peek() is FunctionNode) {
+                        if (operatorStack.Count > 1 && operatorStack.Peek() is FunctionNode) {
                             numberQueue.Enqueue(operatorStack.Pop());
                         }
                     } catch (Exception) {
-                        throw new ArgumentException(ErrorMessages.Mismatch);
+                        throw new ArgumentException();
                     }
                 }
             }
@@ -65,7 +65,7 @@ public static class PostFix {
         }
 
         if (parenthesisCount != 0) {
-            throw new ArgumentException(ErrorMessages.Mismatch);
+            throw new ArgumentException();
         }
 
         return numberQueue.ToList();

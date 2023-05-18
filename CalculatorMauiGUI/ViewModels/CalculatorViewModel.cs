@@ -103,7 +103,7 @@ internal partial class CalculatorViewModel : INotifyPropertyChanged {
             }
         }
         get {
-            if (answer.IsNoDecimalInRecentNumber()) {
+            if (!answer.IsDecimalInRecentNumber()) {
                 return answer;
             } else if (answer.Length < 18) {
                 return answer;
@@ -188,7 +188,7 @@ internal partial class CalculatorViewModel : INotifyPropertyChanged {
                 RefreshCanExecutes();
             },
             canExecute: (string arg) => {
-                return !(arg == "." && !entry.IsNoDecimalInRecentNumber());
+                return !(arg == "." && entry.IsDecimalInRecentNumber());
             });
 
         NegativeDigitCommand = new Command(

@@ -39,8 +39,8 @@ internal static class Extensions {
     /// </summary>
     /// <param name="input">Entry formula string</param>
     /// <returns>Boolean</returns>
-    public static bool IsNoDecimalInRecentNumber(this string input) {
-        bool notUsed = true;
+    public static bool IsDecimalInRecentNumber(this string input) {
+        bool isUsed = false;
         List<char> tempString = new List<char>();
         foreach (char item in input) {
             tempString.Add(item);
@@ -48,7 +48,7 @@ internal static class Extensions {
 
         for (int i = tempString.Count - 1; i >= 0; i--) {
             if (tempString[i] == '.') {
-                notUsed = false;
+                isUsed = true;
                 break;
             }
             //Check ensures method only looks at most recent number inputted.
@@ -56,7 +56,7 @@ internal static class Extensions {
                 break;
             }
         }
-        return notUsed;
+        return isUsed;
     }
 
     /// <summary>
