@@ -54,6 +54,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\CalculatorSupportLibrary\CalculatorSupportLibrary.csproj" />
 	  <ProjectReference Include="..\ShuntingYard\ShuntingYardLibrary.csproj" />
 	</ItemGroup>
 

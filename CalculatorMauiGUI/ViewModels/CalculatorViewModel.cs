@@ -1,5 +1,6 @@
 ﻿using CalculatorMauiGUI.Utilities;
 using ShuntingYardLibrary;
+using CalculatorSupportLibrary;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -13,9 +14,6 @@ internal partial class CalculatorViewModel : INotifyPropertyChanged {
     private bool isSecond = false;
     private bool isHyp = false;
     private bool isTrig = false;
-
-    private decimal PI = 3.1415926535897932384626433832795m;
-    private decimal E = 2.7182818284590452353602874713526m;
 
     public ICommand AnswerCommand { get; private set; }
     public ICommand BackspaceCommand { get; private set; }
@@ -162,9 +160,9 @@ internal partial class CalculatorViewModel : INotifyPropertyChanged {
             execute: (string arg) => {
                 Entry += (arg == ".") ? CheckDigitsBeforeDecimal() : "";
                 if (arg == "PI") {
-                    Entry += PI.ToString();
+                    Entry += MathValues.PI.ToString();
                 } else if (arg == "e") {
-                    Entry += E.ToString();
+                    Entry += MathValues.E.ToString();
                 } else {
                     Entry += arg;
                 }
