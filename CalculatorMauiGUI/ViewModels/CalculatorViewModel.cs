@@ -1,274 +1,318 @@
-﻿using ShuntingYardLibrary;
+﻿using CalculatorMauiGUI.Utilities;
+using ShuntingYardLibrary;
 using System.ComponentModel;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 
-namespace CalculatorMauiGUI.ViewModels
-{
-    internal partial class CalculatorViewModel : INotifyPropertyChanged {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private string entry = "0";
-        private string answer = "";
+namespace CalculatorMauiGUI.ViewModels;
 
-        public ICommand AnswerCommand { private set; get; }
-        public ICommand BackspaceCommand { private set; get; }
-        public ICommand ClearCommand { private set; get; }
-        public ICommand DigitCommand { private set; get; }
-        public ICommand NegativeDigitCommand { private set; get; }
-        public ICommand SaveAnswerCommand { private set; get; }
+internal partial class CalculatorViewModel : INotifyPropertyChanged {
+    public event PropertyChangedEventHandler PropertyChanged;
+    private string entry = "0";
+    private string answer = "";
 
-        public string Entry {
-            private set {
-                if (entry != value) {
-                    entry = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Entry"));
-                }
+    private bool isSecond = false;
+    private bool isHyp = false;
+    private bool isTrig = false;
+
+    private decimal PI = 3.1415926535897932384626433832795m;
+    private decimal E = 2.7182818284590452353602874713526m;
+
+    public ICommand AnswerCommand { get; private set; }
+    public ICommand BackspaceCommand { get; private set; }
+    public ICommand ClearCommand { get; private set; }
+    public ICommand DigitCommand { get; private set; }
+    public ICommand NegativeDigitCommand { get; private set; }
+    public ICommand SaveAnswerCommand { get; private set; }
+
+    public ICommand SecondCommand { get; private set; }
+    public ICommand HypCommand { get; private set; }
+    public ICommand TrigCommand { get; private set; }
+
+    public bool IsSecond { 
+        get {
+            return isSecond;
+        }
+        set {
+            isSecond = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsSecond"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TrigSecond"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TrigHypSecond"));
+        }
+    }
+
+    public bool IsHyp {
+        get {
+            return isHyp;
+        }
+        set {
+            isHyp = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsHyp"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TrigHyp"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TrigHypSecond"));
+        }
+    }
+
+    public bool IsTrig {
+        get {
+            return isTrig;
+        }
+        set {
+            isTrig = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsTrig"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TrigSecond"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TrigHyp"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TrigHypSecond"));
+        }
+    }
+
+    public bool TrigSecond {
+        get {
+            return isTrig && isSecond;
+        }
+    }
+
+    public bool TrigHyp {
+        get {
+            return isTrig && isHyp;
+        }
+    }
+
+    public bool TrigHypSecond {
+        get {
+            return isTrig && isHyp && isSecond;
+        }
+    }
+
+    public string Entry {
+        private set {
+            if (entry != value) {
+                entry = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Entry"));
             }
-            get {
-                return entry;
+        }
+        get {
+            return entry;
+        }
+    }
+
+    public string Answer {
+        private set {
+            if (answer != value) {
+                answer = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Answer"));
             }
         }
-
-        public string Answer {
-            private set {
-                if (answer != value) {
-                    answer = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Answer"));
-                }
-            }
-            get {
-                if (NoDecimalUsedInNumber(answer)) {
-                    return answer;
-                } else if (answer.Length < 18) {
-                    return answer;
-                } else {
-                    return ConvertToScientificNotation(answer);
-                }
+        get {
+            if (answer.IsNoDecimalInRecentNumber()) {
+                return answer;
+            } else if (answer.Length < 18) {
+                return answer;
+            } else {
+                return ConvertToScientificNotation(answer);
             }
         }
+    }
 
-        public CalculatorViewModel() {
-            AnswerCommand = new Command(
-                execute: () => {
-                    Answer = ExpressionTree.Evaluate(Entry);
-                    Entry = "0";
-                    RefreshCanExecutes();
-                },
-                canExecute: () => {
-                    return Entry != "0";
-                });
+    public CalculatorViewModel() {
+        SecondCommand = new Command(
+            execute: () => {
+                IsSecond = !IsSecond;
+                RefreshCanExecutes();
+            });
 
-            BackspaceCommand = new Command(
-                execute: () => {
-                    backspace();
-                    RefreshCanExecutes();
-                },
-                canExecute: () => {
-                    return Entry.Length > 1 || Entry != "0";
-                });
+        HypCommand = new Command(
+            execute: () => {
+                IsHyp = !IsHyp;
+                RefreshCanExecutes();
+            });
 
-            ClearCommand = new Command(
-                execute: () => {
-                    Entry = "0";
-                    Answer = "0";
-                    RefreshCanExecutes();
-                });
+        TrigCommand = new Command(
+            execute: () => {
+                IsTrig = !IsTrig;
+                RefreshCanExecutes();
+            });
 
-            DigitCommand = new Command<string>(
-                execute: (string arg) => {
-                    Entry += (arg == ".") ? CheckDigitsBeforeDecimal() : "";
-                    Entry += arg;
-
-                    if (Entry.StartsWith("0") && !Entry.StartsWith("0.")) {
-                        Entry = Entry.Substring(1);
-                    }
-                    //Prevent user adding a '(' after a digit.
-                    if (Entry.Length > 1 && Entry.EndsWith("(") && Char.IsDigit(Entry[Entry.Length - 2])) {
-                        backspace();
-                    }
-                    //Prevent user adding arithmetic operators immediately after an '(' or another arithmetic operator.
-                    if (Entry.Length > 1 && (IsArithmeticOperator(Entry[Entry.Length - 2]) || Entry[Entry.Length - 2] == '(') && IsArithmeticOperator(Entry[Entry.Length - 1])) {
-                        backspace();
-                    }
-                    // This check prevents the user from starting formula with anything other than a number or '('.
-                    if (IsOperator() && Entry[0] != '-' && arg != "(") {
-                        Entry = "0";
-                    }
-                    RefreshCanExecutes();
-                },
-                canExecute: (string arg) => {
-                    return !(arg == "." && !NoDecimalUsedInNumber(entry));
-                });
-
-            NegativeDigitCommand = new Command(
-                execute: () => {
-                    Entry = ChangeDigitSign();
-                    RefreshCanExecutes();
-                },
-                canExecute: () => {
-                    return Entry != "0";
-                });
-
-            SaveAnswerCommand = new Command(
-                execute: () => {
-                    Entry = Answer;
-                    Answer = "0";
-                    RefreshCanExecutes();
-                },
-                canExecute: () => {
-                    return Entry == "0";
-                });
-        }
-
-        private void RefreshCanExecutes() {
-            ((Command)AnswerCommand).ChangeCanExecute();
-            ((Command)BackspaceCommand).ChangeCanExecute();
-            ((Command)DigitCommand).ChangeCanExecute();
-            ((Command)NegativeDigitCommand).ChangeCanExecute();
-            ((Command)SaveAnswerCommand).ChangeCanExecute();
-        }
-
-        /// <summary>
-        /// Adds a '0' before a leading decimal if no number exists already.
-        /// </summary>
-        /// <returns>Either "" or "0"</returns>
-        private string CheckDigitsBeforeDecimal() {
-            return (char.IsDigit(Entry.Last())) ? "" : "0";
-        }
-
-        /// <summary>
-        /// Converts the decimal answer to scientific notation if the answer is greater than 18 characters.
-        /// </summary>
-        /// <param name="input">Answer</param>
-        /// <returns>Decimal answer in scientific notation format.</returns>
-        private string ConvertToScientificNotation(string input) {
-            decimal nums = Convert.ToDecimal(input);
-            return string.Format("{0:#.######E+00}", nums);
-        }
-
-        /// <summary>
-        /// Removes the last element in the string.
-        /// </summary>
-        private void backspace() {
-            Entry = Entry.Substring(0, Entry.Length - 1);
-            if (Entry == "") {
+        AnswerCommand = new Command(
+            execute: () => {
+                Answer = ExpressionTree.Evaluate(Entry);
                 Entry = "0";
-            }
+                RefreshCanExecutes();
+            },
+            canExecute: () => {
+                return Entry != "0";
+            });
+
+        BackspaceCommand = new Command(
+            execute: () => {
+                backspace();
+                RefreshCanExecutes();
+            },
+            canExecute: () => {
+                return Entry.Length > 1 || Entry != "0";
+            });
+
+        ClearCommand = new Command(
+            execute: () => {
+                Entry = "0";
+                Answer = "0";
+                RefreshCanExecutes();
+            });
+
+        DigitCommand = new Command<string>(
+            execute: (string arg) => {
+                Entry += (arg == ".") ? CheckDigitsBeforeDecimal() : "";
+                if (arg == "PI") {
+                    Entry += PI.ToString();
+                } else if (arg == "e") {
+                    Entry += E.ToString();
+                } else {
+                    Entry += arg;
+                }
+                
+
+                if (Entry.StartsWith("0") && !Entry.StartsWith("0.")) {
+                    Entry = Entry.Substring(1);
+                }
+                //Prevent user adding a '(' after a digit.
+                if (Entry.Length > 1 && Entry.EndsWith("(") && Char.IsDigit(Entry[Entry.Length - 2])) {
+                    backspace();
+                }
+                //Prevent user adding arithmetic operators immediately after an '(' or another arithmetic operator.
+                if (Entry.Length > 1 && (Entry[Entry.Length - 2].IsArithmeticOperator() || Entry[Entry.Length - 2] == '(') && Entry[Entry.Length - 1].IsArithmeticOperator()) {
+                    backspace();
+                }
+                // This check prevents the user from starting formula with anything other than a number or '('.
+                if (IsOperator() && Entry[0] != '-' && arg != "(") {
+                    Entry = "0";
+                }
+                RefreshCanExecutes();
+            },
+            canExecute: (string arg) => {
+                return !(arg == "." && !entry.IsNoDecimalInRecentNumber());
+            });
+
+        NegativeDigitCommand = new Command(
+            execute: () => {
+                Entry = ChangeDigitSign();
+                RefreshCanExecutes();
+            },
+            canExecute: () => {
+                return Entry != "0";
+            });
+
+        SaveAnswerCommand = new Command(
+            execute: () => {
+                Entry = Answer;
+                Answer = "0";
+                RefreshCanExecutes();
+            },
+            canExecute: () => {
+                return Entry == "0";
+            });
+    }
+
+    private void RefreshCanExecutes() {
+        ((Command)AnswerCommand).ChangeCanExecute();
+        ((Command)BackspaceCommand).ChangeCanExecute();
+        ((Command)DigitCommand).ChangeCanExecute();
+        ((Command)NegativeDigitCommand).ChangeCanExecute();
+        ((Command)SaveAnswerCommand).ChangeCanExecute();
+    }
+
+    /// <summary>
+    /// Adds a '0' before a leading decimal if no number exists already.
+    /// </summary>
+    /// <returns>Either "" or "0"</returns>
+    private string CheckDigitsBeforeDecimal() {
+        return (char.IsDigit(Entry.Last())) ? "" : "0";
+    }
+
+    /// <summary>
+    /// Converts the decimal answer to scientific notation if the answer is greater than 18 characters.
+    /// </summary>
+    /// <param name="input">Answer</param>
+    /// <returns>Decimal answer in scientific notation format.</returns>
+    private string ConvertToScientificNotation(string input) {
+        decimal nums = Convert.ToDecimal(input);
+        return string.Format("{0:#.######E+00}", nums);
+    }
+
+    /// <summary>
+    /// Removes the last element in the string.
+    /// </summary>
+    private void backspace() {
+        int index = Entry.NewIndex();
+        Entry = Entry.Substring(0, index);
+        if (Entry == "") {
+            Entry = "0";
+        }
+    }
+
+    /// <summary>
+    /// Takes the most recent digit in the formula and changes its +/-.
+    /// </summary>
+    /// <returns>Returns the new Entry string.</returns>
+    private string ChangeDigitSign() {
+        List<string> digits = Entry.Tokenize();
+
+        if (digits.Count == 0) {
+            return "";
         }
 
-        /// <summary>
-        /// Checks if a decimal is already used in the most current number being entered.
-        /// </summary>
-        /// <param name="input">Entry</param>
-        /// <returns>Boolean</returns>
-        private bool NoDecimalUsedInNumber(string input) {
-            bool notUsed = true;
-            List<char> tempString = new List<char>();
-            foreach (char item in input) {
-                tempString.Add(item);
-            }
-
-            for (int i = tempString.Count - 1; i >= 0; i--) {
-                if (tempString[i] == '.') {
-                    notUsed = false;
-                    break;
-                }
-                //Check ensures method only looks at most recent number inputted.
-                if (!char.IsNumber(tempString[i])) {
-                    break;
-                }
-            }
-            return notUsed;
-        }
-
-        /// <summary>
-        /// Takes the most recent digit in the formula and changes its +/-.
-        /// </summary>
-        /// <returns>Returns the new Entry string.</returns>
-        private string ChangeDigitSign() {
-            List<string> digits = Tokenize(Entry);
-
-            if (digits.Count == 0) {
-                return "";
-            }
-
-            if (!IsDigitCheck(digits.Last())) {
-                return string.Join("", digits.ToArray());
-            }
-
-            if (digits.Count == 1 && IsDigitCheck(digits[0])) {
-                digits.Insert(0, "-");
-                return string.Join("", digits.ToArray());
-            }
-
-            if (IsDigitCheck(digits.Last())) {
-                int i = digits.Count - 1;
-
-                while (i > 0 && IsDigitCheck(digits[i])) {
-                    i--;
-                }
-
-                if (i == 1 && IsDigitCheck(digits[i])) { // 3 => -3
-                    digits.Insert(0, "-");
-                } else if (i == 0 && digits[0] == "-") { // -3 => 3
-                    digits.RemoveAt(0);
-                } else if (i > 0 && IsDigitCheck(digits[i - 1])) { // 4+3 => 4+-3
-                    digits.Insert(i + 1, "-");
-                } else if (i > 2 && digits[i - 1] == ")") { // (2+3)-3 => (2+3)--3
-                    digits.Insert(i + 1, "-");
-                } else if (i > 1 && digits[i] == "-" &&!IsDigitCheck(digits[i - 1])) { // 4+-3 => 4+3
-                    digits.RemoveAt(i);
-                }
-            }
-
+        if (!IsDigitCheck(digits.Last())) {
             return string.Join("", digits.ToArray());
         }
 
-        /// <summary>
-        /// Verifies if the input is a number.
-        /// </summary>
-        /// <param name="input">String input</param>
-        /// <returns>Boolean</returns>
-        private bool IsDigitCheck(string input) {
-            return (int.TryParse(input, out _) || double.TryParse(input, out _) || decimal.TryParse(input, out _));
+        if (digits.Count == 1 && IsDigitCheck(digits[0])) {
+            digits.Insert(0, "-");
+            return string.Join("", digits.ToArray());
         }
 
-        /// <summary>
-        /// Converts Entry into a list of tokens for easier manipulation by ChangeDigitSign() method. 
-        /// </summary>
-        /// <param name="inputString">Entry</param>
-        /// <returns>Regex list.</returns>
-        public List<string> Tokenize(string inputString) {
-            string @pattern = @"[\d]+\.?[\d]*|[-/\+\*\(\)\^]";
-            Regex rgx = new Regex(@pattern);
-            MatchCollection matches = Regex.Matches(inputString, @pattern);
+        if (IsDigitCheck(digits.Last())) {
+            int i = digits.Count - 1;
 
-            return matches.Cast<Match>().Select(match => match.Value).ToList();
-        }
-
-        /// <summary>
-        /// Checks for an arithmetic operator.
-        /// </summary>
-        /// <param name="value">Char value in Entry string</param>
-        /// <returns>Boolean</returns>
-        private bool IsArithmeticOperator(char value) {
-            return (value == '*' || value == '/' || value == '+' || value == '^' || value == '-');
-        }
-
-        /// <summary>
-        /// Checks for the operators and closed parenthesis as the first input to formula.
-        /// </summary>
-        /// <returns>Boolean</returns>
-        private bool IsOperator() {
-            List<char> operators = new List<char>() { ')', '*', '/', '+', '^', '-' };
-            bool output = false;
-
-            foreach (char item in operators) {
-                if (Entry.StartsWith(item)) {
-                    output = true;
-                }
+            while (i > 0 && IsDigitCheck(digits[i])) {
+                i--;
             }
-            return output;
+
+            if (i == 1 && IsDigitCheck(digits[i])) { // 3 => -3
+                digits.Insert(0, "-");
+            } else if (i == 0 && digits[0] == "-") { // -3 => 3
+                digits.RemoveAt(0);
+            } else if (i > 0 && IsDigitCheck(digits[i - 1])) { // 4+3 => 4+-3
+                digits.Insert(i + 1, "-");
+            } else if (i > 2 && digits[i - 1] == ")") { // (2+3)-3 => (2+3)--3
+                digits.Insert(i + 1, "-");
+            } else if (i > 1 && digits[i] == "-" &&!IsDigitCheck(digits[i - 1])) { // 4+-3 => 4+3
+                digits.RemoveAt(i);
+            }
         }
+
+        return string.Join("", digits.ToArray());
+    }
+
+    /// <summary>
+    /// Verifies if the input is a number.
+    /// </summary>
+    /// <param name="input">String input</param>
+    /// <returns>Boolean</returns>
+    private bool IsDigitCheck(string input) {
+        return (int.TryParse(input, out _) || double.TryParse(input, out _) || decimal.TryParse(input, out _));
+    }
+
+    /// <summary>
+    /// Checks for the operators and closed parenthesis as the first input to formula.
+    /// </summary>
+    /// <returns>Boolean</returns>
+    private bool IsOperator() {
+        List<char> operators = new List<char>() { ')', '*', '/', '+', '^', '-' };
+        bool output = false;
+
+        foreach (char item in operators) {
+            if (Entry.StartsWith(item)) {
+                output = true;
+            }
+        }
+        return output;
     }
 }

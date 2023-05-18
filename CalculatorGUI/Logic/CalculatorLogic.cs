@@ -5,6 +5,9 @@ public static class CalculatorLogic {
     public static string Entry { get; private set; } = "0";
     public static string Answer { get; private set; } = String.Empty;
 
+    public static decimal PI = 3.1415926535897932384626433832795m;
+    public static decimal E = 2.7182818284590452353602874713526m;
+
     /// <summary>
     /// When equals button is pushed, the formula is run through the ExpressionTree shunting yard algorithm
     /// and assigns the result to the Answer property.
@@ -44,13 +47,6 @@ public static class CalculatorLogic {
         }
     }
 
-    public static void FactorialCommand() {
-        if (char.IsDigit(Entry.Last())) {
-
-        } else {
-
-        }
-    }
 
     /// <summary>
     /// Calls the PlusMinusDigit method to change the sign of the most recent digit.
