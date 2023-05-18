@@ -69,6 +69,15 @@ internal static class Extensions {
     }
 
     /// <summary>
+    /// Checks for an arithmetic operator.
+    /// </summary>
+    /// <param name="value">String value in Entry string list</param>
+    /// <returns>Boolean</returns>
+    public static bool IsArithmeticOperator(this string value) {
+        return (value == "*" || value == "/" || value == "+" || value == "^" || value == "-" || value == "%");
+    }
+
+    /// <summary>
     /// Converts Entry into a list of tokens for easier manipulation by ChangeDigitSign() method. 
     /// </summary>
     /// <param name="inputString">Entry</param>

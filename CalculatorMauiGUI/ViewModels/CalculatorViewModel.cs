@@ -249,7 +249,7 @@ internal partial class CalculatorViewModel : INotifyPropertyChanged {
     }
 
     /// <summary>
-    /// Takes the most recent digit in the formula and changes its +/-.
+    /// Handles the +/- command logic.
     /// </summary>
     /// <returns>Returns the new Entry string.</returns>
     private string ChangeDigitSign() {
@@ -259,10 +259,23 @@ internal partial class CalculatorViewModel : INotifyPropertyChanged {
             return "";
         }
 
+        if (digits.Last() == ")") {
+            return ChangeParenthesisSign(digits);
+        }
+
         if (!IsDigitCheck(digits.Last())) {
             return string.Join("", digits.ToArray());
         }
 
+        return ChangeDigitSign(digits);
+    }
+
+    /// <summary>
+    /// Takes the most recent digit in the formula and changes its +/-.
+    /// </summary>
+    /// <param name="digits">tokenized list of formula</param>
+    /// <returns>Returns the new Entry string.</returns>
+    private string ChangeDigitSign(List<string> digits) {
         if (digits.Count == 1 && IsDigitCheck(digits[0])) {
             digits.Insert(0, "-");
             return string.Join("", digits.ToArray());
@@ -283,9 +296,46 @@ internal partial class CalculatorViewModel : INotifyPropertyChanged {
                 digits.Insert(i + 1, "-");
             } else if (i > 2 && digits[i - 1] == ")") { // (2+3)-3 => (2+3)--3
                 digits.Insert(i + 1, "-");
-            } else if (i > 1 && digits[i] == "-" &&!IsDigitCheck(digits[i - 1])) { // 4+-3 => 4+3
+            } else if (i > 1 && digits[i] == "-" && !IsDigitCheck(digits[i - 1])) { // 4+-3 => 4+3
                 digits.RemoveAt(i);
             }
+        }
+
+        return string.Join("", digits.ToArray());
+    }
+
+    /// <summary>
+    /// Takes the most recent closed parenthesis in the formula and changes its +/-.
+    /// </summary>
+    /// <param name="digits">tokenized list of formula</param>
+    /// <returns>Returns the new Entry string.</returns>
+    private string ChangeParenthesisSign(List<string> digits) {
+        int i = digits.Count - 1;
+        int parenthesisCount = 0;
+        
+        while (i > 0) { // Places the index at the outermost parenthesis based on most recent closed parenthesis group.
+            if (digits[i] == ")") {
+                parenthesisCount++;
+            }
+            if (parenthesisCount > 0 && digits[i] == "(") {
+                parenthesisCount--;
+            }
+            if (parenthesisCount == 0) {
+                break;
+            }
+            i--;
+        }
+
+        if (i == 0 && digits[i] == "(") { // (32+10) => -(32+10)
+            digits.Insert(0, "-");
+        } else if (i == 1 && digits[i - 1] == "-") { // -(32+10) => (32+10)
+            digits.RemoveAt(0);
+        } else if (i > 1 && digits[i - 1].IsArithmeticOperator() && digits[i - 2].IsArithmeticOperator()) {// 42+-(32+10) => 42+(32+10)
+            digits.RemoveAt(i - 1);
+        } else if (i > 1 && digits[i-1].IsArithmeticOperator()) { // 42+(32+10) => 42+-(32+10)
+            digits.Insert(i, "-");
+        } else if (i > 2 && digits[i-2] ==")") { // (3+2)+(32+10) => (3+2)+-(32+10)
+            digits.Insert(i = 1, "-");
         }
 
         return string.Join("", digits.ToArray());
