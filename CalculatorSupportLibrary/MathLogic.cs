@@ -70,6 +70,10 @@ public static class MathLogic {
 
             if (i == 1 && IsDigitCheck(digits[i])) { // 3 => -3
                 digits.Insert(0, "-");
+            } else if (digits[i] == "(" && IsDigitCheck(digits[i + 1])) { // (3 => (-3
+                digits.Insert(i + 1, "-");
+            } else if (i > 0 && digits[i] == "-" && digits[i - 1] == "(") { // (-3 => (3
+                digits.RemoveAt(i);
             } else if (i == 0 && digits[0] == "-") { // -3 => 3
                 digits.RemoveAt(0);
             } else if (i > 0 && IsDigitCheck(digits[i - 1])) { // 4+3 => 4+-3
@@ -93,7 +97,7 @@ public static class MathLogic {
         int i = digits.Count - 1;
         int parenthesisCount = 0;
 
-        while (i > 0) { // Places the index at the outermost parenthesis based on most recent closed parenthesis group.
+        while (i > 0) { // Places the index at the matching open parenthesis based on most recent closed parenthesis group.
             if (digits[i] == ")") {
                 parenthesisCount++;
             }

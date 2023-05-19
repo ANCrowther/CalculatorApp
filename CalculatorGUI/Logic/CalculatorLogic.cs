@@ -24,8 +24,15 @@ public static class CalculatorLogic {
     /// </summary>
     /// <param name="input">Representative button.</param>
     public static void DigitCommand(string input) {
-        Entry += (input == ".") ? CheckDigitsBeforeDecimal() : "";
-        Entry += input;
+        // Prevents multiple decimals in same number.
+        if (input == "." && !Entry.IsDecimalInRecentNumber()) {
+            Entry += (input == ".") ? CheckDigitsBeforeDecimal() : "";
+            Entry += input;
+        }
+
+        if (input != ".") {
+            Entry += input;
+        }
 
         if (Entry.StartsWith("0") && !Entry.StartsWith("0.")) {
             Entry = Entry.Substring(1);
@@ -38,13 +45,10 @@ public static class CalculatorLogic {
         if (Entry.Length > 1 && (Entry[Entry.Length - 2].IsArithmeticOperator() || Entry[Entry.Length - 2] == '(') && Entry[Entry.Length - 1].IsArithmeticOperator()) {
             Backspace();
         }
+
         // This check prevents the user from starting formula with anything other than a number or '('.
         if (MathLogic.IsOperator(Entry) && Entry[0] != '-' && input != "(") {
             Entry = "0";
-        }
-        // Prevents multiple decimals in same number.
-        if (input == "." && Entry.IsDecimalInRecentNumber()) {
-            Backspace();
         }
     }
 

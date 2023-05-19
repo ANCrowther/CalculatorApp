@@ -66,7 +66,7 @@ public static class Extensions {
     /// <param name="value">Char value in Entry string</param>
     /// <returns>Boolean</returns>
     public static bool IsArithmeticOperator(this char value) {
-        return (value == '*' || value == '/' || value == '+' || value == '^' || value == '-' || value == '%');
+        return IsOperator(value.ToString());
     }
 
     /// <summary>
@@ -75,6 +75,15 @@ public static class Extensions {
     /// <param name="value">String value in Entry string list</param>
     /// <returns>Boolean</returns>
     public static bool IsArithmeticOperator(this string value) {
+        return IsOperator(value);
+    }
+
+    /// <summary>
+    /// Checks for an arithmetic operator.
+    /// </summary>
+    /// <param name="value">String value in Entry string list</param>
+    /// <returns>Boolean</returns>
+    private static bool IsOperator(string value) {
         return (value == "*" || value == "/" || value == "+" || value == "^" || value == "-" || value == "%");
     }
 
